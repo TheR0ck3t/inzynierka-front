@@ -5,6 +5,7 @@ import Pages from './Pages';
 import setupAxios from './utils/axiosConfig';
 
 export default function App() {
+  document.title = import.meta.env.VITE_COMPANY_NAME || 'Zarządzanie Pracownikami';
   useEffect(() => {
     // Inicjalizacja interceptorów przy montowaniu komponentu
     setupAxios();

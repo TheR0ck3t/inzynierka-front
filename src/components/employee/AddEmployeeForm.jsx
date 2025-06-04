@@ -4,7 +4,7 @@ import '../../assets/styles/AddEmployeeForm.css'; // Import stylów CSS
 
 export default function AddEmployeeForm({ onCancel, onSuccess }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const { register, handleSubmit, formState: { errors }, setError } = useForm();
   
   const onSubmit = async (data) => {
     console.log('Form data:', data);
@@ -29,7 +29,12 @@ export default function AddEmployeeForm({ onCancel, onSuccess }) {
         if (onSuccess) {
           onSuccess();
         }
-      } else {
+      }
+      else if(result.error === 'userAlreadyExists') {
+        console.error('Error:', result);
+        setError('email', { type: 'manual', message: result.message });
+      }
+      else {
         console.error('Error:', result);
         alert('Błąd podczas dodawania pracownika: ' + (result.message || 'Nieznany błąd'));
       }
@@ -63,11 +68,7 @@ export default function AddEmployeeForm({ onCancel, onSuccess }) {
         />
         {errors.lastName && <p className="error">{errors.lastName.message}</p>}
         
-        <input 
-          type="email" 
-          placeholder="Email" 
-          {...register("email", {
-            required: "Email jest wymagany",
+        <input type="email" placeholder="Email" {...register("email", {required: "Email jest wymagany",
             pattern: {
               value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
               message: "Nieprawidłowy format adresu email"
@@ -77,19 +78,12 @@ export default function AddEmployeeForm({ onCancel, onSuccess }) {
         {errors.email && <p className="error">{errors.email.message}</p>}
         
         <div className="form-buttons">
-          <button 
-            type="submit" 
-            disabled={isSubmitting}
-          >
+          <button type="submit" disabled={isSubmitting}>
             {isSubmitting ? "Dodawanie..." : "Dodaj pracownika"}
           </button>
           
           {onCancel && (
-            <button 
-              type="button" 
-              onClick={onCancel} 
-              disabled={isSubmitting}
-            >
+            <button type="button" onClick={onCancel} disabled={isSubmitting}>
               Anuluj
             </button>
           )}

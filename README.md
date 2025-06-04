@@ -1,12 +1,116 @@
-# React + Vite
+# Inżynierka Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplikacja frontend do systemu zarządzania pracownikami - projekt inżynierski.
 
-Currently, two official plugins are available:
+## 🚀 Technologie
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **React 19.1.0** - biblioteka UI
+- **Vite 6.3.5** - bundler i dev server
+- **React Router DOM 7.6.1** - routing
+- **React Hook Form 7.57.0** - zarządzanie formularzami
+- **Axios 1.9.0** - HTTP client
+- **FontAwesome** - ikony
 
-## Expanding the ESLint configuration
+## 📋 Wymagania
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- Node.js (v16 lub nowszy)
+- npm lub yarn
+- Backend API uruchomiony na porcie 3000
+
+## 🛠️ Instalacja
+
+1. Sklonuj repozytorium:
+```bash
+git clone <repository-url>
+cd inzynierka-front
+```
+
+2. Zainstaluj zależności:
+```bash
+npm install
+```
+
+3. Skopiuj plik `.env.example` do `.env` i skonfiguruj zmienne środowiskowe:
+```bash
+VITE_COMPANY_NAME="Grand Army of the Republic"
+```
+
+## 🚀 Uruchomienie
+
+### Tryb deweloperski
+```bash
+npm run dev
+```
+Aplikacja będzie dostępna na `http://localhost:5173`
+
+### Budowanie produkcyjne
+```bash
+npm run build
+```
+
+### Podgląd buildu produkcyjnego
+```bash
+npm run preview
+```
+
+### Linting
+```bash
+npm run lint
+```
+
+## 📁 Struktura projektu
+
+```
+src/
+├── components/          # Komponenty wielokrotnego użytku
+│   ├── auth/           # Komponenty autoryzacji
+│   ├── employee/       # Komponenty zarządzania pracownikami
+│   └── layout/         # Komponenty layoutu
+├── pages/              # Strony aplikacji
+├── contexts/           # React Context
+├── hooks/              # Custom hooki
+├── utils/              # Narzędzia pomocnicze
+└── assets/             # Zasoby statyczne
+    └── styles/         # Pliki CSS
+```
+
+## 🔐 Funkcjonalności
+
+### Autoryzacja
+- Logowanie użytkowników
+- Ochrona tras wymagających uwierzytelnienia
+- Zarządzanie sesjami
+
+### Zarządzanie pracownikami
+- Lista wszystkich pracowników
+- Dodawanie nowych pracowników
+- Edycja danych pracowników
+- Usuwanie pracowników
+
+### Ustawienia konta
+- Zmiana hasła
+- Aktualizacja danych osobowych
+- Zarządzanie danymi kontaktowymi
+
+### Dashboard
+- Przegląd statystyk
+- Szybki dostęp do głównych funkcji
+
+## 🔌 Konfiguracja API
+
+Aplikacja komunikuje się z backend API przez Axios. Konfiguracja znajduje się w:
+- `src/utils/axiosConfig.js` - podstawowa konfiguracja
+- Domyślny adres API: `http://localhost:3000/api`
+
+## 🎨 Stylowanie
+
+- CSS modules dla komponentów
+- Responsywny design
+- FontAwesome dla ikon
+- Emblematy Galaktycznej Republiki jako motyw graficzny
+
+## 📝 Zmienne środowiskowe
+
+```bash
+VITE_COMPANY_NAME="Nazwa firmy"  # Nazwa wyświetlana w aplikacji
+```

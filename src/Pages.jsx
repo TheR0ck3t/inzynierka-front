@@ -4,6 +4,8 @@ import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
 import Employees from './pages/Employees';
 import AccountSettings from "./pages/AccountSettings";
+import Statistics from "./pages/Statistics";
+import Logs from "./pages/Logs";
 
 // Komponent chronionej trasy
 const ProtectedRoute = ({ children }) => {
@@ -38,9 +40,22 @@ export default function Pages() {
           <Employees />
         </ProtectedRoute>
       } />
+      
       <Route path="/account-settings" element={
         <ProtectedRoute>
           <AccountSettings />
+        </ProtectedRoute>
+      } />
+
+      <Route path="/statistics" element={
+        <ProtectedRoute>
+          <Statistics />
+        </ProtectedRoute>
+      } />
+
+      <Route path="/logs" element={
+        <ProtectedRoute>
+          <Logs />
         </ProtectedRoute>
       } />
       

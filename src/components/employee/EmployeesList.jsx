@@ -61,16 +61,29 @@ const EmployeesList = forwardRef((props, ref) => {
   if (employees.length === 0) {
     return <div className="employees-list">Brak pracowników do wyświetlenia</div>;
   }
-
+  async function deleteEmployee(id) {
+    try {
+      const response = await axios.delete(`/api/accounts/delete/${id}`, {
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+      console.log("Pracownik usunięty:", response.data);
+      // Odśwież listę pracowników po usunięciu
+      fetchEmployees();
+    } catch (error) {
+      console.error("Błąd podczas usuwania pracownika:", error);
+    }
+  };
   // Renderowanie listy pracowników
   return (
     <div className="employees-list">
         {employees.map(employee => (
-          <div className="employee" key={employee.id}> 
+          <div className="employee" key={employee.id} id={employee.id}> 
             {employee.firstName || employee.first_name} {employee.lastName || employee.last_name} ({employee.email})
             <div className="employee-actions">
               <button className="edit-btn">Edytuj</button>
-              <button className="delete-btn">Usuń</button>
+              <button className="delete-btn" onClick={()=>deleteEmployee(employee.id)}>Usuń</button>
             </div>
           </div>
         ))}

@@ -51,6 +51,14 @@ export default function Menu() {
         <NavLink to="/employees" className={({ isActive }) => isActive ? 'active' : ''}>
           <button type="button">Pracownicy</button>
         </NavLink>
+        
+        <NavLink to="/statistics" className={({ isActive }) => isActive ? 'active' : ''}>
+          <button type="button">Statystyki</button>
+        </NavLink>
+
+        <NavLink to="/logs" className={({ isActive }) => isActive ? 'active' : ''}>
+          <button type="button">Logi</button>
+        </NavLink>
       </div>
       
       {/* Dropdown użytkownika po prawej */}
