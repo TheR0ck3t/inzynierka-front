@@ -1,6 +1,5 @@
 import LoginForm from '../components/auth/LoginForm';
 import '../assets/styles/Home.css';
-import reactLogo from '../assets/react.svg';
 import republicLogo from '../assets/Emblem_of_the_Galactic_Republic.svg';
 
 export default function Home() {

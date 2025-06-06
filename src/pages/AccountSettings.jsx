@@ -1,5 +1,5 @@
-import UpdatePassword from "../components/employee/UpdatePassword";
-import UpdatePhoneNumber from "../components/employee/UpdatePhoneNumber";
+import UpdatePassword from "../components/users/UpdatePassword";
+import UpdatePhoneNumber from "../components/users/UpdatePhoneNumber";
 import { useState } from "react";
 
 export default function AccountSettings() {

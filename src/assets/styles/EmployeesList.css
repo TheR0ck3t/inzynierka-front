@@ -11,3 +11,9 @@
     flex-direction: column;
     gap: 0.5rem;
 }
+
+.error {
+    color: red;
+    font-weight: bold;
+    text-align: center;
+}

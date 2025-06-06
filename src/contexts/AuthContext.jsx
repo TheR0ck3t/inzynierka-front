@@ -8,58 +8,61 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Sprawdzanie statusu autoryzacji przy ładowaniu
+  // Funkcja sprawdzania statusu autoryzacji
+  const checkAuthStatus = async () => {
+    try {
+      const response = await axios.get('/api/auth/check', {
+        withCredentials: true
+      });
+      
+      if (response.data?.isAuthenticated) {
+        setIsAuthenticated(true);
+        setUser(response.data.user);
+      } else {
+        setIsAuthenticated(false);
+        setUser(null);
+      }
+    } catch (error) {
+      console.error('Błąd sprawdzania autoryzacji:', error);
+      setIsAuthenticated(false);
+      setUser(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Sprawdzanie tylko przy pierwszym załadowaniu
   useEffect(() => {
-    const checkAuthStatus = async () => {
-      try {
-        // Konfiguruj axios aby wysyłał ciasteczka
-        axios.defaults.withCredentials = true;
-        
-        // Wysyła zapytanie do API, które sprawdza ważność tokenu w ciasteczkach
-        const response = await axios.get('/api/auth/check');
-        
-        if (response.data && response.data.isAuthenticated) {
-          setIsAuthenticated(true);
-          
-          // Poprawione ustawienie danych użytkownika
-          if (response.data.user) {
-            const userData = response.data.user;
-            setUser(userData);
-          }
-        } else {
+    checkAuthStatus();
+  }, []);
+
+  // Interceptor axios dla automatycznego wylogowania przy 401
+  useEffect(() => {
+    const interceptor = axios.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        if (error.response?.status === 401) {
           setIsAuthenticated(false);
           setUser(null);
         }
-      } catch (error) {
-        console.error('Błąd sprawdzania statusu autoryzacji:', error);
-        setIsAuthenticated(false);
-        setUser(null);
-      } finally {
-        setLoading(false);
+        return Promise.reject(error);
       }
-    };
+    );
 
-    checkAuthStatus();
+    return () => axios.interceptors.response.eject(interceptor);
   }, []);
 
   const login = async (credentials) => {
     try {
-      // Upewnij się, że credentials wysyłane są z opcją withCredentials
       const response = await axios.post('/api/auth/login', credentials, {
         withCredentials: true
       });
       
-      // Jeśli logowanie się powiodło, backend ustawi ciasteczko automatycznie
-      if (response.data && response.status === 200) {
-        // Ustaw stan użytkownika na podstawie odpowiedzi z API
-        if (response.data.user) {
-          setUser(response.data.user);
-        }
-        
+      if (response.status === 200) {
+        setUser(response.data.user);
         setIsAuthenticated(true);
         return true;
       }
-      
       return false;
     } catch (error) {
       console.error('Błąd logowania:', error);
@@ -69,12 +72,11 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      // Wywołaj endpoint wylogowania, który usunie ciasteczko
       await axios.post('/api/auth/logout', {}, {
         withCredentials: true
       });
     } catch (error) {
-      console.error('Błąd podczas wylogowywania:', error);
+      console.error('Błąd wylogowania:', error);
     } finally {
       setIsAuthenticated(false);
       setUser(null);
@@ -82,7 +84,14 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, loading, login, logout }}>
+    <AuthContext.Provider value={{ 
+      isAuthenticated, 
+      user, 
+      loading, 
+      login, 
+      logout,
+      refreshAuth: checkAuthStatus
+    }}>
       {children}
     </AuthContext.Provider>
   );

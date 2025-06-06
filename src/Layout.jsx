@@ -1,5 +1,8 @@
 import useAuth from './hooks/useAuth';
 import Menu from './components/layout/Menu';
+import Footer from './components/layout/Footer';
+import './assets/styles/Layout.css';
+
 
 export default function Layout({ children }) {
   const { isAuthenticated, loading } = useAuth();
@@ -20,6 +23,7 @@ export default function Layout({ children }) {
       <main className="content">
         {children}
       </main>
+      <Footer />
     </div>
   );
 }

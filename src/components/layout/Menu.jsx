@@ -9,7 +9,7 @@ import {
   faCog, 
   faSignOutAlt 
 } from '@fortawesome/free-solid-svg-icons';
-import reactLogo from '../../assets/react.svg'
+import republicLogo from '../../assets/Emblem_of_the_Galactic_Republic.svg';
 
 export default function Menu() {
   const { user, logout } = useAuth();
@@ -35,14 +35,14 @@ export default function Menu() {
       {/* Logo lub element po lewej (opcjonalnie) */}
       <div className="menu-logo">
         <NavLink to="/">
-          <img src={reactLogo} alt="Logo" className="logo-small"/>
+          <img src={republicLogo} alt="Logo" className="logo-small"/>
 
         </NavLink>
       </div>
       
       {/* Linki nawigacyjne na środku */}
       <div className="menu-center">
-        <NavLink to="/dashboard" end className={({ isActive }) => isActive ? 'active' : ''}>
+        <NavLink to="/" end className={({ isActive }) => isActive ? 'active' : ''}>
           <button type="button">
             <FontAwesomeIcon icon={faHouse} />
           </button>

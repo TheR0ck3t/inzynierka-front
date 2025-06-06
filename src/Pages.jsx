@@ -12,7 +12,7 @@ const ProtectedRoute = ({ children }) => {
   const { isAuthenticated } = useAuth();
   
   if (!isAuthenticated) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/Home" replace />;
   }
   
   return children;
@@ -23,13 +23,13 @@ export default function Pages() {
   
   return (
     <Routes>
-      {/* Strona główna / logowanie */}
+      {/* Strona główna - renderuje Home gdy niezalogowany, Dashboard gdy zalogowany */}
       <Route path="/" element={
-        isAuthenticated ? <Navigate to="/dashboard" replace /> : <Home />
+        isAuthenticated ? <Dashboard /> : <Home />
       } />
       
-      {/* Chronione trasy */}
-      <Route path="/dashboard" element={
+      {/* Pozostałe chronione trasy */}
+      <Route path="/" element={
         <ProtectedRoute>
           <Dashboard />
         </ProtectedRoute>

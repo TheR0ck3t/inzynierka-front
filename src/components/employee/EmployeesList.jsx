@@ -12,7 +12,7 @@ const EmployeesList = forwardRef((props, ref) => {
   const fetchEmployees = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('/api/accounts', {
+      const response = await axios.get('/api/employees', {
         headers: {
           'Content-Type': 'application/json',
         }
@@ -63,7 +63,7 @@ const EmployeesList = forwardRef((props, ref) => {
   }
   async function deleteEmployee(id) {
     try {
-      const response = await axios.delete(`/api/accounts/delete/${id}`, {
+      const response = await axios.delete(`/api/employees/delete/${id}`, {
         headers: {
           'Content-Type': 'application/json',
         }
@@ -79,11 +79,13 @@ const EmployeesList = forwardRef((props, ref) => {
   return (
     <div className="employees-list">
         {employees.map(employee => (
-          <div className="employee" key={employee.id} id={employee.id}> 
-            {employee.firstName || employee.first_name} {employee.lastName || employee.last_name} ({employee.email})
+          <div className="employee" key={employee.employee_id} id={employee.employee_id}> 
+            <p>
+              {employee.firstName || employee.first_name} {employee.lastName || employee.last_name} (ID Karty: {employee.keycard_id ? employee.keycard_id : <span className="error">Brak</span> }  )
+            </p>
             <div className="employee-actions">
               <button className="edit-btn">Edytuj</button>
-              <button className="delete-btn" onClick={()=>deleteEmployee(employee.id)}>Usuń</button>
+              <button className="delete-btn" onClick={()=>deleteEmployee(employee.employee_id)}>Usuń</button>
             </div>
           </div>
         ))}

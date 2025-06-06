@@ -4,16 +4,16 @@ import '../../assets/styles/AddEmployeeForm.css'; // Import stylów CSS
 
 export default function AddEmployeeForm({ onCancel, onSuccess }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { register, handleSubmit, formState: { errors }, setError } = useForm();
+  const { register, handleSubmit, formState: { errors } } = useForm();
   
   const onSubmit = async (data) => {
     console.log('Form data:', data);
-    console.log( typeof data.email, typeof data.firstName, typeof data.lastName); 
+    console.log( typeof data.first_name, typeof data.last_name); 
     
     setIsSubmitting(true);
     
     try {
-      const response = await fetch('/api/accounts/create', {
+      const response = await fetch('/api/employees/add', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -29,10 +29,6 @@ export default function AddEmployeeForm({ onCancel, onSuccess }) {
         if (onSuccess) {
           onSuccess();
         }
-      }
-      else if(result.error === 'userAlreadyExists') {
-        console.error('Error:', result);
-        setError('email', { type: 'manual', message: result.message });
       }
       else {
         console.error('Error:', result);
@@ -50,32 +46,54 @@ export default function AddEmployeeForm({ onCancel, onSuccess }) {
     <div className="add-employee-container">
       <h2>Dodaj nowego pracownika</h2>
       <form className="add-employee-form" onSubmit={handleSubmit(onSubmit)}>
-        <input 
+        <label htmlFor="first_name">
+          Imię <span className="required">*</span>
+        </label>
+        <input
+          id="first_name"
           type="text" 
           placeholder="Imię" 
-          {...register("firstName", {
+          {...register("first_name", {
             required: "Imię jest wymagane"
           })} 
         />
-        {errors.firstName && <p className="error">{errors.firstName.message}</p>}
+        {errors.first_name && <p className="error">{errors.first_name.message}</p>}
         
+        <label htmlFor="last_name">
+          Nazwisko <span className="required">*</span>
+        </label>
         <input 
           type="text" 
           placeholder="Nazwisko" 
-          {...register("lastName", {
+          {...register("last_name", {
             required: "Nazwisko jest wymagane"
           })} 
         />
-        {errors.lastName && <p className="error">{errors.lastName.message}</p>}
-        
-        <input type="email" placeholder="Email" {...register("email", {required: "Email jest wymagany",
-            pattern: {
-              value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-              message: "Nieprawidłowy format adresu email"
-            }
-          })} 
+        {errors.last_name && <p className="error">{errors.last_name.message}</p>}
+
+        <label htmlFor="dob">
+          Data urodzenia <span className="required">*</span>
+        </label>
+        <input type="date" placeholder="Data urodzenia" 
+          {...register("dob", {
+            required: "Data urodzenia jest wymagana"
+          })}
         />
-        {errors.email && <p className="error">{errors.email.message}</p>}
+        {errors.dob && <p className="error">{errors.dob.message}</p>}
+
+        <label htmlFor="employment_date">
+          Data zatrudnienia <span className="required">*</span>
+        </label>
+
+        <input 
+          type="date"
+          placeholder="Data zatrudnienia" 
+          {...register("employment_date", {
+            required: "Data zatrudnienia jest wymagana"
+          })}
+        />
+        {errors.employment_date && <p className="error">{errors.employment_date.message}</p>}
+        
         
         <div className="form-buttons">
           <button type="submit" disabled={isSubmitting}>
