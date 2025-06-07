@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
+import TwoFaModal from './TwoFaModal';
 import '../../assets/styles/LoginForm.css';
 
 export default function LoginForm() {
@@ -9,11 +10,21 @@ export default function LoginForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
   
-  const { login } = useAuth();
+  // Lokalny stan dla 2FA modal
+  const [show2FA, setShow2FA] = useState(false);
+  const [loginCredentials, setLoginCredentials] = useState(null);
+
+  // Login i loginWith2FA z AuthContext
+  const authContext = useAuth();
+
+  
+  const { login, loginWith2FA } = authContext;
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
+    
     e.preventDefault();
+    e.stopPropagation();
     
     if (!email || !password) {
       setError('Email i hasło są wymagane');
@@ -24,59 +35,90 @@ export default function LoginForm() {
     setError('');
     
     try {
-        console.log('Próba logowania:', { email });
-      const success = await login({ email, password });
-      console.log('Logowanie zakończone:', success);
+      const result = await login({ email, password });
 
-      if (success) {
-        navigate('/dashboard');
+      if (result.success) {
+        // Login successful
+      } else if (result.requires2FA) {
+        setLoginCredentials({ email, password });
+        setShow2FA(true);
       } else {
-        setError('Nieprawidłowe dane logowania');
+        setError(result.error || 'Nieprawidłowe dane logowania');
       }
-    } catch (err) {
+    } catch {
       setError('Wystąpił błąd podczas logowania');
-      console.error(err);
     } finally {
       setIsSubmitting(false);
     }
   };
 
+  const handle2FASubmit = async (token2fa) => {
+    try {
+      const result = await loginWith2FA(loginCredentials, token2fa);
+      
+      if (result.success) {
+        setShow2FA(false);
+        navigate('/');
+      } else {
+        setError(result.error || 'Błąd logowania z 2FA');
+      }
+    } catch {
+      setError('Błąd weryfikacji 2FA');
+    }
+  };
+
+  const handleClose2FAModal = () => {
+    setShow2FA(false);
+    setLoginCredentials(null);
+    setError('');
+  };
+
   return (
-    <div className="login-form">
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="email">Email</label>
-          <input
-            type="email"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
+    <>
+      <div className="login-form">
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label htmlFor="email">Email</label>
+            <input
+              type="email"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              disabled={isSubmitting}
+            />
+          </div>
+          
+          <div className="form-group">
+            <label htmlFor="password">Hasło</label>
+            <input
+              type="password"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              disabled={isSubmitting}
+            />
+          </div>
+          
+          {error && <div className="error-message">{error}</div>}
+          
+          <button
+            type="submit"
             disabled={isSubmitting}
-          />
-        </div>
-        
-        <div className="form-group">
-          <label htmlFor="password">Hasło</label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            disabled={isSubmitting}
-          />
-        </div>
-        
-        {error && <div className="error-message">{error}</div>}
-        
-        <button
-          type="submit"
-          disabled={isSubmitting}
-        >
-          {isSubmitting ? 'Logowanie...' : 'Zaloguj się'}
-        </button>
-      </form>
-    </div>
+          >
+            {isSubmitting ? 'Logowanie...' : 'Zaloguj się'}
+          </button>
+        </form>
+      </div>
+
+      {show2FA && (
+        <TwoFaModal 
+          isOpen={show2FA} 
+          onClose={handleClose2FAModal} 
+          onSubmit={handle2FASubmit}
+        />
+      )}
+    </>
   );
 }

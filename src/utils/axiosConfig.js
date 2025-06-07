@@ -12,14 +12,18 @@ export const setupAxios = (navigate = null) => {
   axios.interceptors.response.use(
     (response) => response,
     (error) => {
-      // Jeśli serwer zwraca 401 Unauthorized
+      // Przekieruj na stronę logowania przy błędach 401 (nieuprawniony dostęp)
       if (error.response && error.response.status === 401) {
-        // Jeśli mamy funkcję navigate, użyj jej (preferowane)
         if (navigate) {
           navigate('/');
         } else {
-          // Fallback na window.location jeśli navigate nie jest dostępne
-          window.location.href = '/';
+          // Użyj React Router zamiast window.location
+          if (window.history && window.history.pushState) {
+            window.history.pushState({}, '', '/');
+            window.dispatchEvent(new PopStateEvent('popstate'));
+          } else {
+            window.location.href = '/';
+          }
         }
       }
       return Promise.reject(error);

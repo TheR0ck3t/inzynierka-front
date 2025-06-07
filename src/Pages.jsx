@@ -6,13 +6,14 @@ import Employees from './pages/Employees';
 import AccountSettings from "./pages/AccountSettings";
 import Statistics from "./pages/Statistics";
 import Logs from "./pages/Logs";
+import Error404 from "./pages/Error404";
 
 // Komponent chronionej trasy
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated } = useAuth();
   
   if (!isAuthenticated) {
-    return <Navigate to="/Home" replace />;
+    return <Navigate to="/" replace />;
   }
   
   return children;
@@ -60,7 +61,9 @@ export default function Pages() {
       } />
       
       {/* Przekierowanie nieznanych ścieżek */}
-      <Route path="*" element={<Navigate to="/" replace />} />
+      <Route path="*" element={
+        <Error404 />
+      } />
     </Routes>
   );
 }

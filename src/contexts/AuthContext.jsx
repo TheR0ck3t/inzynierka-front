@@ -22,8 +22,7 @@ export const AuthProvider = ({ children }) => {
         setIsAuthenticated(false);
         setUser(null);
       }
-    } catch (error) {
-      console.error('Błąd sprawdzania autoryzacji:', error);
+    } catch {
       setIsAuthenticated(false);
       setUser(null);
     } finally {
@@ -36,22 +35,6 @@ export const AuthProvider = ({ children }) => {
     checkAuthStatus();
   }, []);
 
-  // Interceptor axios dla automatycznego wylogowania przy 401
-  useEffect(() => {
-    const interceptor = axios.interceptors.response.use(
-      (response) => response,
-      (error) => {
-        if (error.response?.status === 401) {
-          setIsAuthenticated(false);
-          setUser(null);
-        }
-        return Promise.reject(error);
-      }
-    );
-
-    return () => axios.interceptors.response.eject(interceptor);
-  }, []);
-
   const login = async (credentials) => {
     try {
       const response = await axios.post('/api/auth/login', credentials, {
@@ -59,14 +42,57 @@ export const AuthProvider = ({ children }) => {
       });
       
       if (response.status === 200) {
+        // Sprawdź czy backend wymaga 2FA
+        if (response.data.requires2FA) {
+          return { 
+            success: false, 
+            requires2FA: true, 
+            error: response.data.error 
+          };
+        }
+        
+        // Normalne logowanie bez 2FA
         setUser(response.data.user);
         setIsAuthenticated(true);
-        return true;
+        return { success: true, requires2FA: false };
       }
-      return false;
+      
+      return { success: false, requires2FA: false };    } catch (error) {
+      return { 
+        success: false, 
+        requires2FA: false, 
+        error: error.response?.data?.error || 'Błąd logowania'
+      };
+    }
+  };
+
+  const loginWith2FA = async (credentials, token2fa) => {
+    try {
+      const response = await axios.post('/api/auth/login', { ...credentials, token2fa }, {
+        withCredentials: true
+      });
+      if (response.status === 200) {
+        // Sprawdź czy backend dalej wymaga 2FA (błędny token)
+        if (response.data.requires2FA) {
+          return { 
+            success: false, 
+            requires2FA: true, 
+            error: response.data.error 
+          };
+        }
+        
+        // Pomyślne logowanie z 2FA
+        setUser(response.data.user);
+        setIsAuthenticated(true);
+        return { success: true };
+      }
+      return { success: false, requires2FA: false };
     } catch (error) {
-      console.error('Błąd logowania:', error);
-      return false;
+      return { 
+        success: false, 
+        requires2FA: false, 
+        error: error.response?.data?.error || 'Błąd logowania z 2FA'
+      };
     }
   };
 
@@ -89,6 +115,7 @@ export const AuthProvider = ({ children }) => {
       user, 
       loading, 
       login, 
+      loginWith2FA,
       logout,
       refreshAuth: checkAuthStatus
     }}>

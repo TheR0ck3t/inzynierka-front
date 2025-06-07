@@ -1,10 +1,13 @@
 import UpdatePassword from "../components/users/UpdatePassword";
 import UpdatePhoneNumber from "../components/users/UpdatePhoneNumber";
+import Manage2FA from "../components/users/Manage2FA";
+
 import { useState } from "react";
 
 export default function AccountSettings() {
   const [showUpdatePassword, setShowUpdatePassword] = useState(false);
   const [showUpdatePhoneNumber, setShowUpdatePhoneNumber] = useState(false);
+  const [showManage2FA, setshowManage2FA] = useState(false);
 
   return (
     <div className="account-settings">
@@ -13,17 +16,23 @@ export default function AccountSettings() {
       <button type="button" onClick={() => {
         setShowUpdatePhoneNumber(true);
         setShowUpdatePassword(false);
+        setshowManage2FA(false);
       }}>
         Dodatkowe informacje
       </button>
       <button type="button" onClick={() => {
         setShowUpdatePassword(true);
         setShowUpdatePhoneNumber(false);
+        setshowManage2FA(false);
       }}>
         Zmień hasło
       </button>
-      <button type="button">
-        Dodaj 2FA
+      <button type="button" onClick={() => {
+        setshowManage2FA(true);
+        setShowUpdatePassword(false);
+        setShowUpdatePhoneNumber(false);
+      }}>
+        2FA
       </button>
       <div className="update">
         {showUpdatePassword && (
@@ -32,9 +41,11 @@ export default function AccountSettings() {
         {showUpdatePhoneNumber && (
           <UpdatePhoneNumber onUpdate={() => setShowUpdatePhoneNumber(false)} />
         )}
+        {showManage2FA && (
+          <Manage2FA onUpdate={() => setshowManage2FA(false)} />
+        )}
       </div>
       {/* Możesz dodać więcej komponentów lub funkcji zarządzających ustawieniami konta */}
-      <p>Wkrótce dodamy więcej funkcji!</p>
     </div>
   );
 }
