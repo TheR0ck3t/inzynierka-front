@@ -9,7 +9,7 @@ export default function UpdatePhoneNumber({ onUpdate }) {
   const onSubmit = async (data) => {
     setIsLoading(true);
     try {
-      const response = await axios.put('/api/accounts/update-phone',
+      const response = await axios.put('/api/accounts/update',
         data,
         {
           headers: {

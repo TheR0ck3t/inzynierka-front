@@ -21,7 +21,7 @@ export default function Employees() {
 
   return (
     <div className="employees">
-      <h1>Lista pracowników</h1>
+      <h1>Lista {import.meta.env.VITE_EMPLOYEE + 'ów'}</h1>
       
       {showAddForm ? (
         <AddEmployeeForm 
@@ -34,7 +34,7 @@ export default function Employees() {
           className="add-employee-btn" 
           onClick={() => setShowAddForm(true)}
         >
-          Dodaj nowego pracownika
+          Dodaj nowego {import.meta.env.VITE_EMPLOYEE+'a' ||'pracownika'}
         </button>
       )}
       

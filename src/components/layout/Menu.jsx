@@ -49,7 +49,7 @@ export default function Menu() {
         </NavLink>
 
         <NavLink to="/employees" className={({ isActive }) => isActive ? 'active' : ''}>
-          <button type="button">Pracownicy</button>
+          <button type="button">{import.meta.env.VITE_EMPLOYEE+'y' || 'Pracownicy' }</button>
         </NavLink>
         
         <NavLink to="/statistics" className={({ isActive }) => isActive ? 'active' : ''}>

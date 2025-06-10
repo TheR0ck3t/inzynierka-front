@@ -18,8 +18,6 @@ const EmployeesList = forwardRef((props, ref) => {
         }
       });
       
-      console.log("Odpowiedź API:", response.data);
-      
       // Sprawdź, czy mamy poprawne dane
       if (response.data && Array.isArray(response.data.data)) {
         setEmployees(response.data.data);
@@ -49,7 +47,7 @@ const EmployeesList = forwardRef((props, ref) => {
 
   // Renderowanie podczas ładowania
   if (loading) {
-    return <div className="employees-list">Ładowanie danych pracowników...</div>;
+    return <div className="employees-list">Ładowanie danych {import.meta.env.EMPLOYEE+'ów' ||'pracowników'}...</div>;
   }
 
   // Renderowanie w przypadku błędu
@@ -59,7 +57,7 @@ const EmployeesList = forwardRef((props, ref) => {
 
   // Renderowanie gdy brak pracowników
   if (employees.length === 0) {
-    return <div className="employees-list">Brak pracowników do wyświetlenia</div>;
+    return <div className="employees-list">Brak {import.meta.env.EMPLOYEE+'ów' ||'pracowników'} do wyświetlenia</div>;
   }
   async function deleteEmployee(id) {
     try {

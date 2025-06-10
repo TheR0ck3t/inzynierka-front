@@ -32,7 +32,7 @@ export default function AddEmployeeForm({ onCancel, onSuccess }) {
       }
       else {
         console.error('Error:', result);
-        alert('Błąd podczas dodawania pracownika: ' + (result.message || 'Nieznany błąd'));
+        alert('Błąd podczas dodawania ' + (import.meta.env.VITE_EMPLOYEE + 'ów' || 'pracowników') + ': ' + (result.message || 'Nieznany błąd'));
       }
     } catch (error) {
       console.error('Error:', error);
@@ -44,7 +44,7 @@ export default function AddEmployeeForm({ onCancel, onSuccess }) {
   
   return(
     <div className="add-employee-container">
-      <h2>Dodaj nowego pracownika</h2>
+      <h2>Dodaj nowego {import.meta.env.VITE_EMPLOYEE ||'pracownika'}</h2>
       <form className="add-employee-form" onSubmit={handleSubmit(onSubmit)}>
         <label htmlFor="first_name">
           Imię <span className="required">*</span>
@@ -97,7 +97,7 @@ export default function AddEmployeeForm({ onCancel, onSuccess }) {
         
         <div className="form-buttons">
           <button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? "Dodawanie..." : "Dodaj pracownika"}
+            {isSubmitting ? "Dodawanie..." :'Dodaj nowego ' + (import.meta.env.VITE_EMPLOYEE + 'a' ||'pracownika')}
           </button>
           
           {onCancel && (
