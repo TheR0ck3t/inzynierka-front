@@ -23,3 +23,6 @@ dist-ssr
 *.sln
 *.sw?
 .env
+
+# Vite config with environment-specific settings
+vite.config.js

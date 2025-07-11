@@ -31,7 +31,14 @@ cd inzynierka-front
 npm install
 ```
 
-3. Skopiuj plik `.env.example` do `.env` i skonfiguruj zmienne środowiskowe:
+3. Skonfiguruj plik vite.config.js:
+```bash
+cp vite.config.js.template vite.config.js
+```
+
+Następnie edytuj plik `vite.config.js` i zastąp `YOUR_API_SERVER:PORT` rzeczywistym adresem twojego API serwera.
+
+4. Skopiuj plik `.env.example` do `.env` i skonfiguruj zmienne środowiskowe:
 ```bash
 cp .env.example .env
 ```
