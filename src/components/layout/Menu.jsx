@@ -69,7 +69,7 @@ export default function Menu() {
             onClick={() => setDropdownOpen(!dropdownOpen)}
           >
             <span className="user-name">
-              {user.firstName || user.first_name} {user.lastName || user.last_name}
+              {user.firstName || user.first_name || "Imię"} {user.lastName || user.last_name || "Nazwisko"}
             </span>
             <FontAwesomeIcon 
               icon={faChevronDown} 
