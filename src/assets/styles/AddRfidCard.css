@@ -1,0 +1,45 @@
+.add-rfid-card-container {
+    max-width: 500px;
+    margin: 20px auto;
+    padding: 20px;
+}
+
+.add-rfid-card-container h2 {
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+}
+
+.status-container {
+    margin: 15px 0;
+    padding: 15px;
+}
+
+.enrollment-status {
+    padding: 10px;
+    /* background: #e3f2fd; */
+}
+
+.primary-button, .secondary-button {
+    padding: 10px 20px;
+    margin-right: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+.primary-button {
+    background: #007bff;
+    color: white;
+}
+
+.secondary-button {
+    background: #ccc;
+}

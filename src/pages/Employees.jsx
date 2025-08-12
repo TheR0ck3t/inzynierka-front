@@ -1,7 +1,10 @@
 import { useState, useRef } from "react";
 import AddEmployeeForm from "../components/employee/AddEmployeeForm";
 import EmployeesList from "../components/employee/EmployeesList";
+import logger from '../utils/logger';
 import "../assets/styles/Employees.css";
+
+const componentLogger = logger.createChildLogger('Employees');
 
 export default function Employees() {
   const [showAddForm, setShowAddForm] = useState(false);
@@ -15,7 +18,7 @@ export default function Employees() {
     // Odśwież listę pracowników używając referencji
     if (employeesListRef.current) {
       employeesListRef.current.refreshEmployees();
-      console.log("Odświeżanie listy pracowników po dodaniu");
+      componentLogger.debug("Refreshing employees list after adding new employee");
     }
   };
 

@@ -1,6 +1,10 @@
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import axios from "axios";
+import logger from '../../utils/logger';
+import '../../assets/styles/UpdatePhoneNumber.css';
+
+const componentLogger = logger.createChildLogger('UpdatePhoneNumber');
 
 export default function UpdatePhoneNumber({ onUpdate }) {
   const { register, handleSubmit, formState: { errors } } = useForm();
@@ -17,31 +21,39 @@ export default function UpdatePhoneNumber({ onUpdate }) {
           },
         });
       if (response.status === 200) {
-        console.log("Numer telefonu zaktualizowany pomyślnie:", response.data);
+        componentLogger.info("Phone number updated successfully:", response.data);
         onUpdate(response.data); // Wywołanie funkcji przekazanej jako props
       } else {
-        console.error("Błąd podczas aktualizacji numeru telefonu:", response.data);
+        componentLogger.error("Phone number update failed:", response.data);
       }
     } catch (error) {
-      console.error("Błąd podczas aktualizacji numeru telefonu:", error);
+      componentLogger.error("Phone number update error:", error);
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="update-phone-form">
+    <div className="update-phone-container">
       <h2>Aktualizacja Numeru Telefonu</h2>
       
-      <div className="form-group">
-        <label htmlFor="phoneNumber">Nowy numer telefonu:</label>
-        <input id="phoneNumber" type="tel" {...register("phone_number", { required: "Numer telefonu jest wymagany" })} />
-        {errors.phoneNumber && <span className="error">{errors.phoneNumber.message}</span>}
-      </div>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div className="form-section">
+          <h3>Zmiana numeru telefonu</h3>
+          
+          <div className="form-group">
+            <label htmlFor="phoneNumber">Nowy numer telefonu:</label>
+            <input id="phoneNumber" type="tel" {...register("phone_number", { required: "Numer telefonu jest wymagany" })} />
+            {errors.phoneNumber && <span className="error">{errors.phoneNumber.message}</span>}
+          </div>
+        </div>
 
-      <button type="submit" disabled={isLoading}>
-        {isLoading ? "Aktualizowanie..." : "Zmień numer telefonu"}
-      </button>
-    </form>
+        <div className="form-buttons">
+          <button type="submit" disabled={isLoading}>
+            {isLoading ? "Aktualizowanie..." : "Zmień numer telefonu"}
+          </button>
+        </div>
+      </form>
+    </div>
   );
 }

@@ -1,10 +1,10 @@
-.add-employee-container {
+.edit-employee-container {
     max-width: 600px;
     margin: 20px auto;
     padding: 20px;
 }
 
-.add-employee-container h2 {
+.edit-employee-header h1 {
     margin: 0 0 20px 0;
 }
 
@@ -31,31 +31,24 @@
     width: 100%;
     padding: 8px;
     border: 1px solid #ccc;
-    box-sizing: border-box;
 }
 
-.form-buttons {
+.form-actions {
     margin-top: 20px;
 }
 
-.form-buttons button {
+.save-btn, .cancel-btn {
     padding: 10px 20px;
     margin-right: 10px;
     border: none;
     cursor: pointer;
 }
 
-.form-buttons button[type="submit"] {
+.save-btn {
     background: #4CAF50;
     color: white;
 }
 
-.form-buttons button[type="button"] {
+.cancel-btn {
     background: red;
-    color: white;
-}
-
-.error {
-    color: red;
-    font-weight: bolder;
 }

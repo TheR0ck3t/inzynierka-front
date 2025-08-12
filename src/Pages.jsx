@@ -3,6 +3,7 @@ import useAuth from './hooks/useAuth';
 import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
 import Employees from './pages/Employees';
+import EditEmployee from './components/employee/editEmployee';
 import AccountSettings from "./pages/AccountSettings";
 import Statistics from "./pages/Statistics";
 import Logs from "./pages/Logs";
@@ -39,6 +40,12 @@ export default function Pages() {
       <Route path="/employees" element={
         <ProtectedRoute>
           <Employees />
+        </ProtectedRoute>
+      } />
+      
+      <Route path="/employees/update/:id" element={
+        <ProtectedRoute>
+          <EditEmployee />
         </ProtectedRoute>
       } />
       

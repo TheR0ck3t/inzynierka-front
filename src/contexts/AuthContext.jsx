@@ -1,5 +1,8 @@
 import { createContext, useState, useEffect } from 'react';
 import axios from 'axios';
+import logger from '../utils/logger';
+
+const contextLogger = logger.createChildLogger('AuthContext');
 
 const AuthContext = createContext();
 
@@ -102,7 +105,7 @@ export const AuthProvider = ({ children }) => {
         withCredentials: true
       });
     } catch (error) {
-      console.error('Błąd wylogowania:', error);
+      contextLogger.error('Logout error:', error);
     } finally {
       setIsAuthenticated(false);
       setUser(null);

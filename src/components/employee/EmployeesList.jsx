@@ -1,9 +1,14 @@
 import { useState, useEffect, forwardRef, useImperativeHandle } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import logger from '../../utils/logger';
 import '../../assets/styles/EmployeesList.css';
+
+const componentLogger = logger.createChildLogger('EmployeesList');
 
 // Używamy forwardRef, aby przekazać referencję z komponentu nadrzędnego
 const EmployeesList = forwardRef((props, ref) => {
+  const navigate = useNavigate();
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -12,7 +17,7 @@ const EmployeesList = forwardRef((props, ref) => {
   const fetchEmployees = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('/api/employees', {
+      const response = await axios.get('/api/employees/list', {
         headers: {
           'Content-Type': 'application/json',
         }
@@ -23,12 +28,12 @@ const EmployeesList = forwardRef((props, ref) => {
         setEmployees(response.data.data);
       } else if (response.data && !Array.isArray(response.data.data)) {
         setError("Nieprawidłowy format danych");
-        console.error("Nieprawidłowy format danych:", response.data);
+        componentLogger.error("Invalid data format:", response.data);
       } else {
         setEmployees([]);
       }
     } catch (error) {
-      console.error("Błąd podczas pobierania pracowników:", error);
+      componentLogger.error("Error fetching employees:", error);
       setError("Wystąpił błąd podczas pobierania danych");
     } finally {
       setLoading(false);
@@ -59,6 +64,7 @@ const EmployeesList = forwardRef((props, ref) => {
   if (employees.length === 0) {
     return <div className="employees-list">Brak {import.meta.env.EMPLOYEE+'ów' ||'pracowników'} do wyświetlenia</div>;
   }
+  
   async function deleteEmployee(id) {
     try {
       const response = await axios.delete(`/api/employees/delete/${id}`, {
@@ -66,13 +72,18 @@ const EmployeesList = forwardRef((props, ref) => {
           'Content-Type': 'application/json',
         }
       });
-      console.log("Pracownik usunięty:", response.data);
+      componentLogger.info("Employee deleted:", response.data);
       // Odśwież listę pracowników po usunięciu
       fetchEmployees();
     } catch (error) {
-      console.error("Błąd podczas usuwania pracownika:", error);
+      componentLogger.error("Error deleting employee:", error);
     }
   };
+
+  const handleEditEmployee = (employeeId) => {
+    navigate(`/employees/update/${employeeId}`);
+  };
+
   // Renderowanie listy pracowników
   return (
     <div className="employees-list">
@@ -82,7 +93,12 @@ const EmployeesList = forwardRef((props, ref) => {
               {employee.firstName || employee.first_name} {employee.lastName || employee.last_name} (ID Karty: {employee.keycard_id ? employee.keycard_id : <span className="error">Brak</span> }  )
             </p>
             <div className="employee-actions">
-              <button className="edit-btn">Edytuj</button>
+              <button 
+                className="edit-btn"
+                onClick={() => handleEditEmployee(employee.employee_id)}
+              >
+                Edytuj
+              </button>
               <button className="delete-btn" onClick={()=>deleteEmployee(employee.employee_id)}>Usuń</button>
             </div>
           </div>

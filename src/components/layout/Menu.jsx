@@ -49,7 +49,7 @@ export default function Menu() {
         </NavLink>
 
         <NavLink to="/employees" className={({ isActive }) => isActive ? 'active' : ''}>
-          <button type="button">{import.meta.env.VITE_EMPLOYEE+'y' || 'Pracownicy' }</button>
+          <button type="button">{import.meta.env.VITE_EMPLOYEE || 'Pracownicy' }</button>
         </NavLink>
         
         <NavLink to="/statistics" className={({ isActive }) => isActive ? 'active' : ''}>
@@ -69,7 +69,7 @@ export default function Menu() {
             onClick={() => setDropdownOpen(!dropdownOpen)}
           >
             <span className="user-name">
-              {user.firstName || user.first_name || "Imię"} {user.lastName || user.last_name || "Nazwisko"}
+              {user.first_name || "Imię"} {user.last_name || "Nazwisko"}
             </span>
             <FontAwesomeIcon 
               icon={faChevronDown} 

@@ -1,4 +1,7 @@
 import axios from "axios";
+import logger from '../../utils/logger';
+
+const componentLogger = logger.createChildLogger('Manage2FA');
 
 export default function Manage2FA() {
 const handleAdd2FA = async () => {
@@ -21,11 +24,11 @@ const handleAdd2FA = async () => {
             
         }
         else {
-        console.error("Błąd podczas dodawania 2FA:", response.data);
+        componentLogger.error("Error adding 2FA:", response.data);
     }
     } 
     catch (error) {
-        console.error("Błąd podczas dodawania 2FA:", error);
+        componentLogger.error("Network error adding 2FA:", error);
         
     }
     };
@@ -41,10 +44,10 @@ const handleRemove2FA = async () => {
             // Możesz tutaj dodać logikę do potwierdzenia usunięcia 2FA
             
         } else {
-            console.error("Błąd podczas usuwania 2FA:", response.data);
+            componentLogger.error("Error removing 2FA:", response.data);
         }
     } catch (error) {
-        console.error("Błąd podczas usuwania 2FA:", error);
+        componentLogger.error("Network error removing 2FA:", error);
     }
 }
     
