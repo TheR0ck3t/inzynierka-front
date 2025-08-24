@@ -32,7 +32,7 @@ export default function EditEmployee() {
         try {
             setLoading(true);
             const response = await axios.get(`/api/employees/${id}`);
-            
+            console.log('Fetched employee data:', response.data);
             if (response.data && response.data.data) {
                 const emp = response.data.data;
                 setEmployee(emp);
@@ -41,8 +41,8 @@ export default function EditEmployee() {
                     last_name: emp.last_name || emp.lastName || '',
                     email: emp.email || '',
                     phone: emp.phone || '',
-                    position: emp.position || '',
-                    department: emp.department || ''
+                    position: emp.job_title || '',
+                    department: emp.department_name || ''
                 });
             }
         } catch (error) {
