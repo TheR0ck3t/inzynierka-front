@@ -74,8 +74,7 @@ export default function EditEmployee() {
                     'Content-Type': 'application/json',
                 }
             });
-
-            if (response.data.success) {
+            if (response.data.status === 'success') {
                 alert('Dane pracownika zostały zaktualizowane');
                 navigate('/employees');
             }

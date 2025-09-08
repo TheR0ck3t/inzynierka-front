@@ -1,0 +1,168 @@
+.current-employees-header {
+    margin-bottom: 25px;
+}
+
+.current-employees-header h3 {
+    margin: 0 0 15px 0;
+    color: #374151;
+}
+
+.employee-summary {
+    display: flex;
+    gap: 20px;
+    padding: 15px;
+    background: #f9fafb;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+}
+
+.employee-summary span {
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.working-count {
+    color: #059669;
+}
+
+.away-count {
+    color: #dc2626;
+}
+
+.total-count {
+    color: #374151;
+}
+
+.employees-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 15px;
+    max-height: 500px;
+    overflow-y: auto;
+    padding: 10px 0;
+}
+
+.employee-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 16px;
+    background: white;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.employee-card:hover {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
+}
+
+.employee-card.working {
+    border-left: 4px solid #10b981;
+    background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%);
+}
+
+.employee-card.away {
+    border-left: 4px solid #ef4444;
+    background: linear-gradient(135deg, #fef2f2 0%, #ffffff 100%);
+    opacity: 0.8;
+}
+
+.employee-status {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 12px;
+}
+
+.status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 12px;
+    margin-top: 6px;
+    flex-shrink: 0;
+}
+
+.status-dot.green {
+    background-color: #10b981;
+    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+}
+
+.status-dot.red {
+    background-color: #ef4444;
+    box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
+}
+
+.employee-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.employee-name {
+    font-weight: 600;
+    font-size: 1rem;
+    color: #111827;
+    margin-bottom: 2px;
+}
+
+.employee-department {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin-bottom: 1px;
+}
+
+.employee-title {
+    font-size: 0.8rem;
+    color: #9ca3af;
+    font-style: italic;
+}
+
+.employee-details {
+    border-top: 1px solid #f3f4f6;
+    padding-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.work-time .hours {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #059669;
+}
+
+.employee-card.away .work-time .hours {
+    color: #6b7280;
+    font-weight: 500;
+}
+
+.start-time {
+    font-size: 0.8rem;
+    color: #6b7280;
+    text-align: right;
+}
+
+.no-employees {
+    text-align: center;
+    padding: 40px;
+    color: #6b7280;
+    font-style: italic;
+}
+
+/* Responsywność */
+@media (max-width: 768px) {
+    .employees-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .employee-summary {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .employee-details {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+}

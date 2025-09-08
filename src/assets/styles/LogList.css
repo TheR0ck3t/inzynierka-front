@@ -1,0 +1,6 @@
+.log-item {
+    display: flex;
+    justify-content: space-evenly;
+    padding: 8px 12px;
+    border-bottom: 1px solid #eee;
+}

@@ -8,11 +8,13 @@ import AccountSettings from "./pages/AccountSettings";
 import Statistics from "./pages/Statistics";
 import Logs from "./pages/Logs";
 import Error404 from "./pages/Error404";
+import ITDepartment from "./pages/ITDeptartment";
+import HRDepartment from "./pages/HRDepartment";
 
 // Komponent chronionej trasy
 const ProtectedRoute = ({ children }) => {
-  const { isAuthenticated } = useAuth();
-  
+  const { user, isAuthenticated } = useAuth();
+  console.log(user)
   if (!isAuthenticated) {
     return <Navigate to="/" replace />;
   }
@@ -20,14 +22,35 @@ const ProtectedRoute = ({ children }) => {
   return children;
 };
 
+
 export default function Pages() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
+
+  const departmentPage = user?.department_name ? (
+    user.department_name === 'IT' ? (
+      <ITDepartment />
+    ) : user.department_name === 'HR' ? (
+      <HRDepartment />
+    ) : (
+      <Dashboard />
+    )
+  ) : (
+    <Dashboard /> // Jeśli nie ma departamentu, wyświetl Dashboard
+  );
   
+
   return (
     <Routes>
       {/* Strona główna - renderuje Home gdy niezalogowany, Dashboard gdy zalogowany */}
       <Route path="/" element={
-        isAuthenticated ? <Dashboard /> : <Home />
+        isAuthenticated ? departmentPage : <Home />
+      } />
+
+      {/* Trasa Zależna od działu */}
+      <Route path ="/" element={
+        <ProtectedRoute>
+          {departmentPage}
+        </ProtectedRoute>
       } />
       
       {/* Pozostałe chronione trasy */}
