@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHouse } from '@fortawesome/free-solid-svg-icons';
 import { NavLink } from 'react-router-dom';
-import '../../assets/styles/Error404.css';
+import '../assets/styles/Error404.css';
 
 export default function Error404() {
     return (
