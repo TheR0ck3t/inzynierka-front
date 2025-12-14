@@ -1,3 +1,5 @@
+import EmploymentTypeSelect from './EmploymentTypeSelect';
+
 export default function JobDataSection({ formData, handleInputChange }) {
     return (
         <div className="form-section">
@@ -24,6 +26,11 @@ export default function JobDataSection({ formData, handleInputChange }) {
                     onChange={handleInputChange}
                 />
             </div>
+            <EmploymentTypeSelect
+                value={formData.employment_type_id || ''}
+                onChange={(value) => handleInputChange({ target: { name: 'employment_type_id', value }})}
+                error={formData.errors?.employment_type_id}
+            />
         </div>
     );
 }

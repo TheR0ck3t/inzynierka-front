@@ -2,12 +2,13 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 import logger from '../../utils/logger';
 import '../../assets/styles/AddEmployeeForm.css'; // Import stylów CSS
+import EmploymentTypeSelect from "./EmploymentTypeSelect";
 
 const componentLogger = logger.createChildLogger('AddEmployeeForm');
 
 export default function AddEmployeeForm({ onCancel, onSuccess }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const { register, handleSubmit, formState: { errors }, setValue, watch } = useForm();
   
   const onSubmit = async (data) => {
     componentLogger.debug('Form data:', data);
@@ -108,6 +109,12 @@ export default function AddEmployeeForm({ onCancel, onSuccess }) {
             />
             {errors.employment_date && <p className="error">{errors.employment_date.message}</p>}
           </div>
+          
+          <EmploymentTypeSelect
+            value={watch('employment_type_id') || ''}
+            onChange={(value) => setValue('employment_type', value)}
+            error={errors.employment_type_id}
+          />
         </div>
         
         <div className="form-buttons">

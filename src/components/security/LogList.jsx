@@ -40,7 +40,7 @@ export default function LogList() {
     fetchLogs();
     const socket = io('/access-logs', { path: '/socket.io' });
     socket.on('connect', () => {
-      console.log('Połączono z /access-logs przez Socket.IO');
+      // Połączono z Socket.IO
     });
     // Przykład odbioru nowego loga (event musi być emitowany z backendu, np. 'new-log')
     socket.on('new-log', (newLog) => {

@@ -101,7 +101,7 @@ export default function LoginForm() {
             />
           </div>
           
-          {error && <div className="error-message">{error}</div>}
+          {error && <div className="error">{error}</div>}
           
           <button
             type="submit"

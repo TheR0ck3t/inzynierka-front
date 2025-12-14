@@ -32,12 +32,6 @@ export default function WorkStats() {
             axios.get('/api/work-stats/current-employees')
         ]);
         
-        // Dodaj logowanie dla debugowania
-        console.log('Daily data:', dailyRes.data);
-        console.log('Weekly data:', weeklyRes.data);
-        console.log('Monthly data:', monthlyRes.data);
-        console.log('Employees data:', employeesRes.data);
-        
         setDailyStats(Array.isArray(dailyRes.data?.data) ? dailyRes.data.data : []);
         setWeeklyStats(Array.isArray(weeklyRes.data?.data) ? weeklyRes.data.data : []);
         setMonthlyStats(Array.isArray(monthlyRes.data?.data) ? monthlyRes.data.data : []);
@@ -48,7 +42,6 @@ export default function WorkStats() {
     } catch (error) {
         setError('Wystąpił błąd podczas ładowania statystyk.');
         componentLogger.error('Błąd podczas ładowania statystyk:', error);
-        console.error('Full error:', error.response?.data || error.message);
     } finally {
         setLoading(false);
     }

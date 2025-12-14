@@ -14,7 +14,6 @@ import HRDepartment from "./pages/HRDepartment";
 // Komponent chronionej trasy
 const ProtectedRoute = ({ children }) => {
   const { user, isAuthenticated } = useAuth();
-  console.log(user)
   if (!isAuthenticated) {
     return <Navigate to="/" replace />;
   }

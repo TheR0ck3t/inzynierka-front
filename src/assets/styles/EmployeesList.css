@@ -12,8 +12,10 @@
     gap: 0.5rem;
 }
 
-.error {
+.employee p .error {
     color: red;
     font-weight: bold;
-    text-align: center;
+    display: inline !important;
+    margin: 0 !important;
+    padding: 0 !important;
 }

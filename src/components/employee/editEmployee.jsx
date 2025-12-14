@@ -24,7 +24,8 @@ export default function EditEmployee() {
         email: '',
         phone: '',
         position: '',
-        department: ''
+        department: '',
+        employment_type_id: ''
     });
 
     // Pobierz dane pracownika
@@ -32,7 +33,6 @@ export default function EditEmployee() {
         try {
             setLoading(true);
             const response = await axios.get(`/api/employees/${id}`);
-            console.log('Fetched employee data:', response.data);
             if (response.data && response.data.data) {
                 const emp = response.data.data;
                 setEmployee(emp);
@@ -42,7 +42,8 @@ export default function EditEmployee() {
                     email: emp.email || '',
                     phone: emp.phone || '',
                     position: emp.job_title || '',
-                    department: emp.department_name || ''
+                    department: emp.department_name || '',
+                    employment_type_id: emp.employment_type_id || ''
                 });
             }
         } catch (error) {
@@ -69,7 +70,14 @@ export default function EditEmployee() {
 
     const handleSave = async () => {
         try {
-            const response = await axios.put(`/api/employees/update/${id}`, formData, {
+            // Wysyłamy tylko pola które mogą być edytowane (+ employment_type_id)
+            const updateData = {
+                first_name: formData.first_name,
+                last_name: formData.last_name,
+                employment_type_id: formData.employment_type_id ? parseInt(formData.employment_type_id) : null
+            };
+            
+            const response = await axios.put(`/api/employees/update/${id}`, updateData, {
                 headers: {
                     'Content-Type': 'application/json',
                 }
