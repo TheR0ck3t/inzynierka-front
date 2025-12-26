@@ -4,6 +4,7 @@ import {
   BarChart, Bar, PieChart, Pie, Cell
 } from 'recharts';
 import axios from 'axios';
+import { io } from 'socket.io-client';
 import logger from '../../utils/logger';
 import '../../assets/styles/WorkStats.css';
 
@@ -28,8 +29,8 @@ export default function WorkStats() {
         const [dailyRes, weeklyRes, monthlyRes, employeesRes] = await Promise.all([
             axios.get('/api/work-stats/daily'),
             axios.get('/api/work-stats/weekly'), 
-            axios.get('/api/work-stats/monthly'), // poprawiona ścieżka
-            axios.get('/api/work-stats/current-employees')
+            axios.get('/api/work-stats/monthly'),
+            axios.get('/api/work-stats/all-employees-status') // Zmienione na endpoint zwracający wszystkich
         ]);
         
         setDailyStats(Array.isArray(dailyRes.data?.data) ? dailyRes.data.data : []);
@@ -47,8 +48,47 @@ export default function WorkStats() {
     }
 };
 
+    const fetchEmployeesOnly = async () => {
+        try {
+            const employeesRes = await axios.get('/api/work-stats/all-employees-status');
+            setEmployeeList(Array.isArray(employeesRes.data?.data) ? employeesRes.data.data : []);
+            componentLogger.debug('Lista pracowników zaktualizowana');
+        } catch (error) {
+            componentLogger.error('Błąd podczas aktualizacji listy pracowników:', error);
+        }
+    };
+
     useEffect(() => {
         fetchStats();
+        
+        // WebSocket dla real-time updates - relatywnie przez Vite proxy
+        const socket = io('/employees-status', {
+            withCredentials: true
+        });
+        
+        socket.on('connect', () => {
+            componentLogger.info('Connected to employees-status WebSocket');
+        });
+        
+        socket.on('status-update', (data) => {
+            componentLogger.info('Received status update:', data);
+            // Odśwież TYLKO listę pracowników (nie całe statystyki)
+            fetchEmployeesOnly();
+        });
+        
+        socket.on('disconnect', () => {
+            componentLogger.info('Disconnected from employees-status WebSocket');
+        });
+        
+        // Opcjonalnie: fallback polling co 30 sekund (gdyby WebSocket nie działał)
+        const interval = setInterval(() => {
+            fetchEmployeesOnly();
+        }, 30000);
+        
+        return () => {
+            socket.disconnect();
+            clearInterval(interval);
+        };
     }, []);
 
     if (loading) {
@@ -100,7 +140,7 @@ export default function WorkStats() {
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="date" />
                 <YAxis />
-                <Tooltip formatter={(value) => [`${value}h`, 'Godziny pracy']} />
+                <Tooltip formatter={(value) => [`${parseFloat(value).toFixed(1)}h`, 'Godziny pracy']} />
                 <Legend />
                 <Line 
                   type="monotone" 
@@ -129,7 +169,7 @@ export default function WorkStats() {
                             <CartesianGrid strokeDasharray="3 3" />
                             <XAxis dataKey="day_name" />
                             <YAxis />
-                            <Tooltip formatter={(value) => [`${value}h`, 'Godziny pracy']} />
+                            <Tooltip formatter={(value) => [`${parseFloat(value).toFixed(1)}h`, 'Godziny pracy']} />
                             <Legend />
                             <Bar 
                                 dataKey="total_hours" 
@@ -149,7 +189,7 @@ export default function WorkStats() {
                             <CartesianGrid strokeDasharray="3 3" />
                             <XAxis dataKey="date" />
                             <YAxis />
-                            <Tooltip formatter={(value) => [`${value}h`, 'Godziny pracy']} />
+                            <Tooltip formatter={(value) => [`${parseFloat(value).toFixed(1)}h`, 'Godziny pracy']} />
                             <Legend />
                             <Line 
                                 type="monotone" 
