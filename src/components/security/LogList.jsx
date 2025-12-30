@@ -71,7 +71,7 @@ export default function LogList() {
         <div key={log.access_id} className="log-item" id={log.access_id}>
           <p><strong>Pracownik:</strong> {log.employee_name}</p>
           <p><strong>Data:</strong> {new Date(log.timestamp).toLocaleString()}</p>
-          <p><strong>Miejsce:</strong> {log.reader_id}</p>
+          <p><strong>Miejsce:</strong> {log.reader_name || log.reader_id} {log.reader_location && `(${log.reader_location})`}</p>
           <p><strong>Akcja:</strong> {log.action}</p>
           <p><strong>Status:</strong> {log.status}</p>
         </div>
