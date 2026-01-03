@@ -8,7 +8,7 @@ export default function EmploymentTypeSelect({ value, onChange, error }) {
     useEffect(() => {
         const fetchEmploymentTypes = async () => {
             try {
-                const response = await axios.get('/api/employees/employmentTypes/list', {
+                const response = await axios.get('/api/employees/employment-types/list', {
                     headers: {
                         'Content-Type': 'application/json',
                     }
