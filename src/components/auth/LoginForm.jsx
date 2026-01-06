@@ -38,7 +38,11 @@ export default function LoginForm() {
       const result = await login({ email, password });
 
       if (result.success) {
-        // Login successful
+        // Sprawdź czy wymaga zmiany hasła
+        if (result.requiresPasswordChange) {
+          navigate('/change-password-first-login');
+        }
+        // Login successful - zostanie przekierowany automatycznie przez Pages.jsx
       } else if (result.requires2FA) {
         setLoginCredentials({ email, password });
         setShow2FA(true);

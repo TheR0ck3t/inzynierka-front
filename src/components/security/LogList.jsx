@@ -15,7 +15,7 @@ export default function LogList() {
   const fetchLogs = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('/api/logs/access-logs', {
+      const response = await axios.get('/api/security/access-logs', {
         headers: {
           'Content-Type': 'application/json',
         }

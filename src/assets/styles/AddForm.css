@@ -1,10 +1,10 @@
-.add-employee-container {
+.add-form-container {
     max-width: 600px;
     margin: 20px auto;
     padding: 20px;
 }
 
-.add-employee-container h2 {
+.add-form-container h2 {
     margin: 0 0 20px 0;
 }
 
@@ -34,23 +34,23 @@
     box-sizing: border-box;
 }
 
-.form-buttons {
+.form-actions {
     margin-top: 20px;
 }
 
-.form-buttons button {
+.form-actions button {
     padding: 10px 20px;
     margin-right: 10px;
     border: none;
     cursor: pointer;
 }
 
-.form-buttons button[type="submit"] {
+.form-actions button[type="submit"] {
     background: #4CAF50;
     color: white;
 }
 
-.form-buttons button[type="button"] {
+.form-actions button[type="button"] {
     background: red;
     color: white;
 }

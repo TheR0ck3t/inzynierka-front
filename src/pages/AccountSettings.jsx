@@ -11,7 +11,7 @@ export default function AccountSettings() {
 
   return (
     <div className="account-settings">
-      <h1>Ustawienia konta</h1>
+      <h2>Ustawienia konta</h2>
       <p>W tej sekcji możesz zarządzać ustawieniami swojego konta.</p>
       <button type="button" onClick={() => {
         setShowUpdatePhoneNumber(true);

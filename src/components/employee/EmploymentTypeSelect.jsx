@@ -34,7 +34,7 @@ export default function EmploymentTypeSelect({ value, onChange, error }) {
                 disabled={loading}
                 className={error ? 'error' : ''}
             >
-                <option value="">Wybierz formę zatrudnienia</option>
+                <option value="" hidden>Wybierz formę zatrudnienia</option>
                 {employmentTypes.map(type => (
                     <option 
                         key={type.employment_type_id} 

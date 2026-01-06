@@ -22,7 +22,6 @@ const EmployeesList = forwardRef((props, ref) => {
           'Content-Type': 'application/json',
         }
       });
-      
       // Sprawdź, czy mamy poprawne dane
       if (response.data && Array.isArray(response.data.data)) {
         setEmployees(response.data.data);

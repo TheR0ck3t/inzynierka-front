@@ -11,6 +11,8 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import republicLogo from '../../assets/Emblem_of_the_Galactic_Republic.svg';
 
+
+
 export default function Menu() {
   const { user, logout } = useAuth();
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -48,17 +50,36 @@ export default function Menu() {
           </button>
         </NavLink>
 
-        <NavLink to="/employees" className={({ isActive }) => isActive ? 'active' : ''}>
-          <button type="button">{import.meta.env.VITE_EMPLOYEE || 'Pracownicy' }</button>
-        </NavLink>
+        {/* Dostępne dla IT i HR */}
+        {(user?.department_name === 'IT' || user?.department_name === 'HR') && (
+          <NavLink to="/employees" className={({ isActive }) => isActive ? 'active' : ''}>
+            <button type="button">Pracownicy</button>
+          </NavLink>
+        )}
         
-        <NavLink to="/statistics" className={({ isActive }) => isActive ? 'active' : ''}>
-          <button type="button">Statystyki</button>
-        </NavLink>
+        {/* Dostępne tylko dla HR */}
+        {user?.department_name === 'HR' && (
+          <NavLink to="/statistics" className={({ isActive }) => isActive ? 'active' : ''}>
+            <button type="button">Statystyki</button>
+          </NavLink>
+        )}
 
-        <NavLink to="/logs" className={({ isActive }) => isActive ? 'active' : ''}>
-          <button type="button">Logi</button>
-        </NavLink>
+        {/* Dostępne tylko dla IT */}
+        {user?.department_name === 'IT' && (
+          <>
+            <NavLink to="/users" className={({ isActive }) => isActive ? 'active' : ''}>
+              <button type="button">Użytkownicy</button>
+            </NavLink>
+            
+            <NavLink to="/Status" className={({ isActive }) => isActive ? 'active' : ''}>
+              <button type="button">Status Systemu</button>
+            </NavLink>
+
+            <NavLink to="/logs" className={({ isActive }) => isActive ? 'active' : ''}>
+              <button type="button">Logi</button>
+            </NavLink>
+          </>
+        )}
       </div>
       
       {/* Dropdown użytkownika po prawej */}
@@ -69,7 +90,7 @@ export default function Menu() {
             onClick={() => setDropdownOpen(!dropdownOpen)}
           >
             <span className="user-name">
-              {user.first_name || "Imię"} {user.last_name || "Nazwisko"}
+              {user.first_name || "Imię"} {user.last_name || "Nazwisko"} - {user.department_name || "Dział"}
             </span>
             <FontAwesomeIcon 
               icon={faChevronDown} 

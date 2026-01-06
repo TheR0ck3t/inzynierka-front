@@ -57,10 +57,15 @@ export const AuthProvider = ({ children }) => {
         // Normalne logowanie bez 2FA
         setUser(response.data.user);
         setIsAuthenticated(true);
-        return { success: true, requires2FA: false };
+        return { 
+          success: true, 
+          requires2FA: false,
+          requiresPasswordChange: response.data.requiresPasswordChange || false
+        };
       }
       
-      return { success: false, requires2FA: false };    } catch (error) {
+      return { success: false, requires2FA: false };
+    } catch (error) {
       return { 
         success: false, 
         requires2FA: false, 

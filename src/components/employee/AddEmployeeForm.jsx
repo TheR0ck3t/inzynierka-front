@@ -1,7 +1,8 @@
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import logger from '../../utils/logger';
-import '../../assets/styles/AddEmployeeForm.css'; // Import stylów CSS
+import axios from "axios";
+import '../../assets/styles/AddForm.css'; // Import stylów CSS
 import EmploymentTypeSelect from "./EmploymentTypeSelect";
 
 const componentLogger = logger.createChildLogger('AddEmployeeForm');
@@ -17,37 +18,28 @@ export default function AddEmployeeForm({ onCancel, onSuccess }) {
     setIsSubmitting(true);
     
     try {
-      const response = await fetch('/api/employees/add', {
-        method: 'POST',
+      const response = await axios.post('/api/employees/add', data, {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data),
       });
 
-      const result = await response.json();
-      
-      if (response.ok) {
-        componentLogger.info('Employee added successfully:', result);
-        // Wywołaj funkcję przekazaną przez props, aby powiadomić rodzica o sukcesie
-        if (onSuccess) {
-          onSuccess();
-        }
-      }
-      else {
-        componentLogger.error('Failed to add employee:', result);
-        alert('Błąd podczas dodawania ' + (import.meta.env.VITE_EMPLOYEE + 'ów' || 'pracowników') + ': ' + (result.message || 'Nieznany błąd'));
+      componentLogger.info('Employee added successfully:', response.data);
+      // Wywołaj funkcję przekazaną przez props, aby powiadomić rodzica o sukcesie
+      if (onSuccess) {
+        onSuccess();
       }
     } catch (error) {
-      componentLogger.error('Network error adding employee:', error);
-      alert('Błąd połączenia: ' + error.message);
+      componentLogger.error('Error adding employee:', error);
+      const errorMessage = error.response?.data?.message || error.message || 'Nieznany błąd';
+      alert('Błąd podczas dodawania ' + (import.meta.env.VITE_EMPLOYEE + 'ów' || 'pracowników') + ': ' + errorMessage);
     } finally {
       setIsSubmitting(false);
     }
   };
   
   return(
-    <div className="add-employee-container">
+    <div className="add-form-container">
       <h2>Dodaj nowego {import.meta.env.VITE_EMPLOYEE ||'pracownika'}</h2>
       
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -112,14 +104,14 @@ export default function AddEmployeeForm({ onCancel, onSuccess }) {
           
           <EmploymentTypeSelect
             value={watch('employment_type_id') || ''}
-            onChange={(value) => setValue('employment_type', value)}
+            onChange={(value) => setValue('employment_type_id', value)}
             error={errors.employment_type_id}
           />
         </div>
         
-        <div className="form-buttons">
+        <div className="form-actions">
           <button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? "Dodawanie..." :'Dodaj nowego ' + (import.meta.env.VITE_EMPLOYEE + 'a' ||'pracownika')}
+            {isSubmitting ? "Dodawanie..." : "Dodaj nowego pracownika"}
           </button>
           
           {onCancel && (

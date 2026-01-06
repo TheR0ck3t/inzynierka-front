@@ -3,17 +3,18 @@ import useAuth from './hooks/useAuth';
 import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
 import Employees from './pages/Employees';
-import EditEmployee from './components/employee/editEmployee';
+import EditEmployee from './components/employee/EditEmployee';
 import AccountSettings from "./pages/AccountSettings";
 import Statistics from "./pages/Statistics";
 import Logs from "./pages/Logs";
 import Error404 from "./pages/Error404";
-import ITDepartment from "./pages/ITDeptartment";
-import HRDepartment from "./pages/HRDepartment";
+import Users from "./pages/Users";
+import HealthStatus from "./pages/HealthStatus";
+import FirstLoginPasswordChange from "./pages/FirstLoginPasswordChange";
 
 // Komponent chronionej trasy
 const ProtectedRoute = ({ children }) => {
-  const { user, isAuthenticated } = useAuth();
+  const {isAuthenticated } = useAuth();
   if (!isAuthenticated) {
     return <Navigate to="/" replace />;
   }
@@ -23,40 +24,13 @@ const ProtectedRoute = ({ children }) => {
 
 
 export default function Pages() {
-  const { isAuthenticated, user } = useAuth();
-
-  const departmentPage = user?.department_name ? (
-    user.department_name === 'IT' ? (
-      <ITDepartment />
-    ) : user.department_name === 'HR' ? (
-      <HRDepartment />
-    ) : (
-      <Dashboard />
-    )
-  ) : (
-    <Dashboard /> // Jeśli nie ma departamentu, wyświetl Dashboard
-  );
-  
+  const { isAuthenticated } = useAuth();
 
   return (
     <Routes>
       {/* Strona główna - renderuje Home gdy niezalogowany, Dashboard gdy zalogowany */}
       <Route path="/" element={
-        isAuthenticated ? departmentPage : <Home />
-      } />
-
-      {/* Trasa Zależna od działu */}
-      <Route path ="/" element={
-        <ProtectedRoute>
-          {departmentPage}
-        </ProtectedRoute>
-      } />
-      
-      {/* Pozostałe chronione trasy */}
-      <Route path="/" element={
-        <ProtectedRoute>
-          <Dashboard />
-        </ProtectedRoute>
+        isAuthenticated ? <Dashboard /> : <Home />
       } />
       
       <Route path="/employees" element={
@@ -88,11 +62,32 @@ export default function Pages() {
           <Logs />
         </ProtectedRoute>
       } />
+
+      <Route path="/users" element={
+        <ProtectedRoute>
+          <Users />
+        </ProtectedRoute>
+      } />
+
+      <Route path="/Status" element={
+        <ProtectedRoute>
+          <HealthStatus />
+        </ProtectedRoute>
+      } />
+
+      {/* Zmiana hasła przy pierwszym logowaniu */}
+      <Route path="/change-password-first-login" element={
+        <ProtectedRoute>
+          <FirstLoginPasswordChange />
+        </ProtectedRoute>
+      } />
+
       
       {/* Przekierowanie nieznanych ścieżek */}
       <Route path="*" element={
         <Error404 />
       } />
+      
     </Routes>
   );
 }
