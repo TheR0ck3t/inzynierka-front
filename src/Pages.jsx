@@ -11,6 +11,7 @@ import Error404 from "./pages/Error404";
 import Users from "./pages/Users";
 import HealthStatus from "./pages/HealthStatus";
 import FirstLoginPasswordChange from "./pages/FirstLoginPasswordChange";
+import Readers from "./pages/Readers";
 
 // Komponent chronionej trasy
 const ProtectedRoute = ({ children }) => {
@@ -72,6 +73,12 @@ export default function Pages() {
       <Route path="/Status" element={
         <ProtectedRoute>
           <HealthStatus />
+        </ProtectedRoute>
+      } />
+
+      <Route path="/readers" element={
+        <ProtectedRoute>
+          <Readers />
         </ProtectedRoute>
       } />
 

@@ -75,6 +75,10 @@ export default function Menu() {
               <button type="button">Status Systemu</button>
             </NavLink>
 
+            <NavLink to="/readers" className={({ isActive }) => isActive ? 'active' : ''}>
+              <button type="button">Czytniki</button>
+            </NavLink>
+
             <NavLink to="/logs" className={({ isActive }) => isActive ? 'active' : ''}>
               <button type="button">Logi</button>
             </NavLink>

@@ -1,0 +1,12 @@
+.split-screen {
+    display: flex;
+    width: 100%;
+    overflow: hidden;
+}
+.split-screen > div {
+    flex: 1;
+    overflow: auto;
+}
+.split-screen.horizontal {
+    flex-direction: row;
+}

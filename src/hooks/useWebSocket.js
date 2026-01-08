@@ -7,12 +7,19 @@ const hookLogger = logger.createChildLogger('useWebSocket');
 export default function useWebSocket(onMessage) {
     const socket = useRef(null);
     const [connected, setConnected] = useState(false);
+    const onMessageRef = useRef(onMessage);
+
+    // Aktualizuj ref gdy callback się zmieni (bez reconnect)
+    useEffect(() => {
+        onMessageRef.current = onMessage;
+    }, [onMessage]);
 
     useEffect(() => {
-        // Połącz z backend Socket.IO server przez Vite proxy
+        // Połącz z głównym namespace backend Socket.IO server przez Vite proxy
+        // Ten hook jest używany głównie do enrollment i poleceń kontrolera
         socket.current = io({
-            withCredentials: true,
-            transports: ['websocket', 'polling']
+            path: '/socket.io',
+            transports: ['polling', 'websocket']
         });
 
         socket.current.on('connect', () => {
@@ -28,24 +35,32 @@ export default function useWebSocket(onMessage) {
         // Nasłuchuj na odpowiedzi o dodanych tagach
         socket.current.on('tagAddResponse', (data) => {
             hookLogger.debug('Received tag add response', data);
-            if (onMessage) {
-                onMessage(data);
+            if (onMessageRef.current) {
+                onMessageRef.current(data);
             }
         });
 
         // Nasłuchuj na nowe karty z enrollment
         socket.current.on('cardEnrolled', (data) => {
             hookLogger.debug('Received card enrolled', data);
-            if (onMessage) {
-                onMessage(data);
+            if (onMessageRef.current) {
+                onMessageRef.current(data);
             }
         });
 
         // Nasłuchuj na wszystkie broadcast messages
         socket.current.on('broadcast', (data) => {
             hookLogger.debug('Received broadcast', data);
-            if (onMessage) {
-                onMessage(data);
+            if (onMessageRef.current) {
+                onMessageRef.current(data);
+            }
+        });
+
+        // Nasłuchuj na aktualizacje listy czytników
+        socket.current.on('readers_list', (data) => {
+            hookLogger.debug('Received readers list update', data);
+            if (onMessageRef.current) {
+                onMessageRef.current({ type: 'readers_list', ...data });
             }
         });
 
@@ -54,7 +69,7 @@ export default function useWebSocket(onMessage) {
                 socket.current.disconnect();
             }
         };
-    }, [onMessage]);
+    }, []); // Pusta tablica - połącz tylko raz!
 
     const sendMessage = (event, data) => {
         if (socket.current && connected) {

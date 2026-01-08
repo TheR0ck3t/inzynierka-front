@@ -25,10 +25,13 @@ export default function UpdatePassword({ onUpdate }) {
   const onSubmit = async (data) => {
     setApiError('');
     setSuccessMessage('');
-    componentLogger.debug("Account update requested:", data);
+    componentLogger.debug("Password change requested:", data);
     
     try {
-      const response = await axios.put('/api/accounts/update', data, {
+      const response = await axios.post('/api/auth/change-password', {
+        currentPassword: data.current_password,
+        newPassword: data.new_password
+      }, {
         headers: {
           'Content-Type': 'application/json',
         },
