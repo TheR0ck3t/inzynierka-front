@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { io } from 'socket.io-client';
 import logger from '../../../utils/logger';
 import { useDraggable } from '@dnd-kit/core';
@@ -39,10 +39,12 @@ export default function LiveReaders() {
   const [liveReaders, setLiveReaders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const hasReceivedReadersRef = useRef(false);
 
   useEffect(() => {
     const socket = io('/readers-list', { 
       path: '/socket.io',
+      withCredentials: true,
       reconnection: true,
       reconnectionDelay: 1000,
       reconnectionDelayMax: 5000,
@@ -54,8 +56,8 @@ export default function LiveReaders() {
     
     // Timeout 5 sekund - jeśli brak danych, zakończ ładowanie
     const timeoutId = setTimeout(() => {
-      setLoading(false);
-      if (liveReaders.length === 0) {
+      if (!hasReceivedReadersRef.current) {
+        setLoading(false);
         componentLogger.warn('No readers received within timeout');
       }
     }, 5000);
@@ -85,6 +87,7 @@ export default function LiveReaders() {
     
     socket.on('readers_list', (data) => {
       componentLogger.info('Received readers_list update:', data);
+      hasReceivedReadersRef.current = true;
       clearTimeout(timeoutId);
       if (data && data.readers && Array.isArray(data.readers)) {
         setLiveReaders(data.readers);
@@ -127,7 +130,7 @@ export default function LiveReaders() {
       clearTimeout(timeoutId);
       socket.disconnect();
     };
-  }, [liveReaders]);
+  }, []);
 
   if (loading) {
     return <div>Ładowanie dostępnych czytników...</div>;

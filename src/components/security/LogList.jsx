@@ -38,7 +38,7 @@ export default function LogList() {
 
   useEffect(() => {
     fetchLogs();
-    const socket = io('/access-logs', { path: '/socket.io' });
+    const socket = io('/access-logs', { path: '/socket.io', withCredentials: true });
     socket.on('connect', () => {
       // Połączono z Socket.IO
     });

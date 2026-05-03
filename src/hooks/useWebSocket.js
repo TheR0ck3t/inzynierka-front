@@ -19,6 +19,7 @@ export default function useWebSocket(onMessage) {
         // Ten hook jest używany głównie do enrollment i poleceń kontrolera
         socket.current = io({
             path: '/socket.io',
+            withCredentials: true,
             transports: ['polling', 'websocket']
         });
 
