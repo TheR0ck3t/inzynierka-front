@@ -37,7 +37,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     checkAuthStatus();
   }, []);
-
+  // Obsługa logowania
   const login = async (credentials) => {
     try {
       const response = await axios.post('/api/auth/login', credentials, {
@@ -73,7 +73,7 @@ export const AuthProvider = ({ children }) => {
       };
     }
   };
-
+  // Obsługa logowania z 2FA
   const loginWith2FA = async (credentials, token2fa) => {
     try {
       const response = await axios.post('/api/auth/login', { ...credentials, token2fa }, {
@@ -103,7 +103,7 @@ export const AuthProvider = ({ children }) => {
       };
     }
   };
-
+  // Obsługa wylogowania
   const logout = async () => {
     try {
       await axios.post('/api/auth/logout', {}, {
@@ -116,7 +116,7 @@ export const AuthProvider = ({ children }) => {
       setUser(null);
     }
   };
-
+  // Udostępnianie stanu autoryzacji i funkcji logowania w kontekście
   return (
     <AuthContext.Provider value={{ 
       isAuthenticated, 

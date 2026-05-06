@@ -5,6 +5,7 @@ import AddRfidCard from '../rfid/AddRfidCard';
 import PersonalDataSection from './PersonalDataSection';
 import JobDataSection from './JobDataSection';
 import RfidCardSection from './RfidCardSection';
+import DepartmentSelect from './DepartmentSelect';
 import logger from '../../utils/logger';
 import '../../assets/styles/EditEmployee.css';
 
@@ -24,8 +25,7 @@ export default function EditEmployee() {
         email: '',
         phone: '',
         position: '',
-        department: '',
-        employment_type_id: ''
+        department_id: ''
     });
 
     // Pobierz dane pracownika
@@ -42,8 +42,7 @@ export default function EditEmployee() {
                     email: emp.email || '',
                     phone: emp.phone || '',
                     position: emp.job_title || '',
-                    department: emp.department_name || '',
-                    employment_type_id: emp.employment_type_id || ''
+                    department_id: emp.department_id || ''
                 });
             }
         } catch (error) {
@@ -70,11 +69,11 @@ export default function EditEmployee() {
 
     const handleSave = async () => {
         try {
-            // Wysyłamy tylko pola które mogą być edytowane (+ employment_type_id)
+            // Wysyłamy tylko pola które mogą być edytowane (+ department_id)
             const updateData = {
                 first_name: formData.first_name,
                 last_name: formData.last_name,
-                employment_type_id: formData.employment_type_id ? parseInt(formData.employment_type_id) : null
+                department_id: formData.department_id ? parseInt(formData.department_id) : null
             };
             
             const response = await axios.put(`/api/employees/update/${id}`, updateData, {
@@ -143,6 +142,11 @@ export default function EditEmployee() {
                     <JobDataSection 
                         formData={formData}
                         handleInputChange={handleInputChange}
+                    />
+
+                    <DepartmentSelect
+                        value={formData.department_id || ''}
+                        onChange={(value) => setFormData(prev => ({ ...prev, department_id: value }))}
                     />
                     
                     <RfidCardSection 

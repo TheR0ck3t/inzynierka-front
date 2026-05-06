@@ -3,7 +3,7 @@ import { useState } from "react";
 import logger from '../../utils/logger';
 import axios from "axios";
 import '../../assets/styles/AddForm.css'; // Import stylów CSS
-import EmploymentTypeSelect from "./EmploymentTypeSelect";
+import DepartmentSelect from "./DepartmentSelect";
 
 const componentLogger = logger.createChildLogger('AddEmployeeForm');
 
@@ -101,11 +101,11 @@ export default function AddEmployeeForm({ onCancel, onSuccess }) {
             />
             {errors.employment_date && <p className="error">{errors.employment_date.message}</p>}
           </div>
-          
-          <EmploymentTypeSelect
-            value={watch('employment_type_id') || ''}
-            onChange={(value) => setValue('employment_type_id', value)}
-            error={errors.employment_type_id}
+
+          <DepartmentSelect
+            value={watch('department_id') || ''}
+            onChange={(value) => setValue('department_id', value)}
+            error={errors.department_id}
           />
         </div>
         

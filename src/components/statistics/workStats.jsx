@@ -254,6 +254,9 @@ export default function WorkStats() {
                         {employee.is_working && employee.shift_start && (
                             <div className="start-time">
                                 Rozpoczął: {new Date(employee.shift_start).toLocaleTimeString('pl-PL', {
+                                    day: '2-digit',
+                                    month: '2-digit',
+                                    year: '2-digit',
                                     hour: '2-digit', 
                                     minute: '2-digit'
                                 })}

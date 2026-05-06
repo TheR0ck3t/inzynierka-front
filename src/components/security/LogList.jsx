@@ -35,7 +35,7 @@ export default function LogList() {
       setLoading(false);
     }
   };
-
+  //Nasłuchuj na nowe logi przez Socket.IO
   useEffect(() => {
     fetchLogs();
     const socket = io('/access-logs', { path: '/socket.io', withCredentials: true });
