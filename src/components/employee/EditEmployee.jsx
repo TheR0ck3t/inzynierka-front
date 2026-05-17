@@ -32,6 +32,7 @@ export default function EditEmployee() {
     const fetchEmployee = useCallback(async () => {
         try {
             setLoading(true);
+            setError(null);
             const response = await axios.get(`/api/employees/${id}`);
             if (response.data && response.data.data) {
                 const emp = response.data.data;
@@ -47,7 +48,11 @@ export default function EditEmployee() {
             }
         } catch (error) {
             componentLogger.error('Error fetching employee:', error);
-            setError('Nie udało się pobrać danych pracownika');
+            if (error?.response?.status === 404) {
+                setError('Nie znaleziono pracownika');
+            } else {
+                setError('Nie udało się pobrać danych pracownika');
+            }
         } finally {
             setLoading(false);
         }

@@ -1,9 +1,33 @@
 import { useEffect, useRef, useState } from 'react';
+import axios from 'axios';
 import { io } from 'socket.io-client';
 import logger from '../../../utils/logger';
 import { useDraggable } from '@dnd-kit/core';
 
 const componentLogger = logger.createChildLogger('LiveReaders');
+const READERS_CACHE_KEY = 'live-readers-cache';
+
+function readCachedReaders() {
+  try {
+    const cached = localStorage.getItem(READERS_CACHE_KEY);
+    if (!cached) {
+      return [];
+    }
+
+    const parsed = JSON.parse(cached);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
+function writeCachedReaders(readers) {
+  try {
+    localStorage.setItem(READERS_CACHE_KEY, JSON.stringify(readers));
+  } catch {
+    // Cache jest tylko optymalizacją, więc błędy zapisu ignorujemy.
+  }
+}
 
 function DraggableReader({ reader }) {
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
@@ -36,8 +60,8 @@ function DraggableReader({ reader }) {
 }
 
 export default function LiveReaders() {
-  const [liveReaders, setLiveReaders] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [liveReaders, setLiveReaders] = useState(() => readCachedReaders());
+  const [loading, setLoading] = useState(() => readCachedReaders().length === 0);
   const [error, setError] = useState(null);
   const hasReceivedReadersRef = useRef(false);
 
@@ -45,6 +69,7 @@ export default function LiveReaders() {
     const socket = io('/readers-list', { 
       path: '/socket.io',
       withCredentials: true,
+      autoConnect: false,
       reconnection: true,
       reconnectionDelay: 1000,
       reconnectionDelayMax: 5000,
@@ -53,6 +78,25 @@ export default function LiveReaders() {
       transports: ['websocket', 'polling']
     });
     setLoading(true);
+
+    const connectTimer = setTimeout(() => {
+      socket.connect();
+    }, 0);
+
+    axios.get('/api/readers/list', { withCredentials: true })
+      .then((response) => {
+        const readers = response?.data?.data;
+        if (Array.isArray(readers)) {
+          hasReceivedReadersRef.current = true;
+          setLiveReaders(readers);
+          writeCachedReaders(readers);
+          setLoading(false);
+          setError(null);
+        }
+      })
+      .catch((error) => {
+        componentLogger.warn('Initial readers list fetch failed, waiting for WebSocket:', error?.response?.status || error.message);
+      });
     
     // Timeout 5 sekund - jeśli brak danych, zakończ ładowanie
     const timeoutId = setTimeout(() => {
@@ -91,10 +135,12 @@ export default function LiveReaders() {
       clearTimeout(timeoutId);
       if (data && data.readers && Array.isArray(data.readers)) {
         setLiveReaders(data.readers);
+        writeCachedReaders(data.readers);
         setLoading(false);
         setError(null);
       } else if (data && Array.isArray(data)) {
         setLiveReaders(data);
+        writeCachedReaders(data);
         setLoading(false);
         setError(null);
       } else {
@@ -128,6 +174,7 @@ export default function LiveReaders() {
     
     return () => {
       clearTimeout(timeoutId);
+      clearTimeout(connectTimer);
       socket.disconnect();
     };
   }, []);

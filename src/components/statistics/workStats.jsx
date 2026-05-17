@@ -38,7 +38,7 @@ export default function WorkStats() {
         setMonthlyStats(Array.isArray(monthlyRes.data?.data) ? monthlyRes.data.data : []);
         setEmployeeList(Array.isArray(employeesRes.data?.data) ? employeesRes.data.data : []);
 
-        componentLogger.info('Statystyki załadowane pomyślnie');
+        componentLogger.info('Statystyki zostały załadowane');
     
     } catch (error) {
         setError('Wystąpił błąd podczas ładowania statystyk.');
@@ -52,9 +52,9 @@ export default function WorkStats() {
         try {
             const employeesRes = await axios.get('/api/work-stats/all-employees-status');
             setEmployeeList(Array.isArray(employeesRes.data?.data) ? employeesRes.data.data : []);
-            componentLogger.debug('Lista pracowników zaktualizowana');
+            componentLogger.debug('Lista obecności pracowników została odświeżona');
         } catch (error) {
-            componentLogger.error('Błąd podczas aktualizacji listy pracowników:', error);
+            componentLogger.error('Nie udało się odświeżyć listy pracowników:', error);
         }
     };
 
@@ -101,26 +101,25 @@ export default function WorkStats() {
 
     return (
         <div className="work-stats">
-            <h2>Statystyki Pracy</h2>
-        {/* Tabs for Daily, Weekly, Monthly */}
+            <h2>Podsumowanie pracy</h2>
         <div className="stats-tab">
             <button
             className={activeTab === 'daily' ? 'active' : ''}
             onClick={() => setActiveTab('daily')}
         >
-            Dziennie
+            Ostatnie 7 dni
         </button>
         <button
             className={activeTab === 'weekly' ? 'active' : ''}
             onClick={() => setActiveTab('weekly')}
         >
-            Tygodniowo
+            Ten tydzień
         </button>
         <button
             className={activeTab === 'monthly' ? 'active' : ''}
             onClick={() => setActiveTab('monthly')}
         >
-            Miesięcznie
+            Ten miesiąc
         </button>
         <button
             className={activeTab === 'current' ? 'active' : ''}
@@ -129,97 +128,92 @@ export default function WorkStats() {
             Obecni Pracownicy
         </button>
         </div>
-        {/* Charts Section */}
         <div className="charts-grid">
-            {/* Daily Stats Chart */}
             {activeTab === 'daily' && (
                 <div className="chart-container">
-                    <h3>Godziny pracy w ostatnich 7 dniach</h3>
+                    <h3>Godziny pracy z ostatnich 7 dni</h3>
                     <ResponsiveContainer width="100%" height={300}>
               <LineChart data={dailyStats}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="date" />
                 <YAxis />
-                <Tooltip formatter={(value) => [`${parseFloat(value).toFixed(1)}h`, 'Godziny pracy']} />
+                <Tooltip formatter={(value) => [`${parseFloat(value).toFixed(1)} h`, 'Godziny']} />
                 <Legend />
                 <Line 
                   type="monotone" 
                   dataKey="total_hours" 
                   stroke="#8884d8" 
                   strokeWidth={2}
-                  name="Łączne godziny"
+                  name="Suma godzin"
                 />
                 <Line 
                   type="monotone" 
                   dataKey="avg_hours" 
                   stroke="#82ca9d" 
                   strokeWidth={2}
-                  name="Średnie godziny"
+                  name="Średnia na osobę"
                 />
               </LineChart>
             </ResponsiveContainer>
                 </div>
             )}
-            {/* Weekly Stats Chart */}
             {activeTab === 'weekly' && (
                 <div className="chart-container">
-                    <h3>Godziny pracy w tym tygodniu</h3>
+                    <h3>Godziny pracy w bieżącym tygodniu</h3>
                     <ResponsiveContainer width="100%" height={300}>
                         <BarChart data={weeklyStats}>
                             <CartesianGrid strokeDasharray="3 3" />
                             <XAxis dataKey="day_name" />
                             <YAxis />
-                            <Tooltip formatter={(value) => [`${parseFloat(value).toFixed(1)}h`, 'Godziny pracy']} />
+                            <Tooltip formatter={(value) => [`${parseFloat(value).toFixed(1)} h`, 'Godziny']} />
                             <Legend />
                             <Bar 
                                 dataKey="total_hours" 
                                 fill="#8884d8" 
-                                name="Łączne godziny"
+                                name="Suma godzin"
                             />
                             </BarChart>
                         </ResponsiveContainer>
                     </div>
                 )}
-            {/* Monthly Stats Chart */}
             {activeTab === 'monthly' && (
                 <div className="chart-container">
-                    <h3>Godziny pracy w miesiącu</h3>
+                    <h3>Godziny pracy w bieżącym miesiącu</h3>
                     <ResponsiveContainer width="100%" height={300}>
                         <LineChart data={monthlyStats}>
                             <CartesianGrid strokeDasharray="3 3" />
                             <XAxis dataKey="date" />
                             <YAxis />
-                            <Tooltip formatter={(value) => [`${parseFloat(value).toFixed(1)}h`, 'Godziny pracy']} />
+                            <Tooltip formatter={(value) => [`${parseFloat(value).toFixed(1)} h`, 'Godziny']} />
                             <Legend />
                             <Line 
                                 type="monotone" 
                                 dataKey="total_hours" 
                                 stroke="#8884d8" 
                                 strokeWidth={2}
-                                name="Łączne godziny"
+                                name="Suma godzin"
                             />
                             <Line 
                                 type="monotone" 
                                 dataKey="avg_hours" 
                                 stroke="#82ca9d" 
                                 strokeWidth={2}
-                                name="Średnie godziny"
+                                name="Średnia na osobę"
                             />
                         </LineChart>
                     </ResponsiveContainer>
                 </div>
             )}
-            {/* Current Employees Chart */}
             {activeTab === 'current' && (
     <div className="chart-container">
         <div className="current-employees-header">
-            <h3>Obecni Pracownicy</h3>
+            <h3>Aktualna obecność pracowników</h3>
             <div className="employee-summary">
                 <span className="working-count">
-                    🟢 Obecni: {employeeList.filter(emp => emp.is_working).length}
+                    🟢 W pracy: {employeeList.filter(emp => emp.is_working).length}
                 </span>
                 <span className="away-count">
-                    🔴 Nieobecni: {employeeList.filter(emp => !emp.is_working).length}
+                    🔴 Poza pracą: {employeeList.filter(emp => !emp.is_working).length}
                 </span>
                 <span className="total-count">
                     👥 Razem: {employeeList.length}
@@ -234,7 +228,7 @@ export default function WorkStats() {
                         <span className={`status-dot ${employee.is_working ? 'green' : 'red'}`}></span>
                         <div className="employee-info">
                             <span className="employee-name">{employee.employee_name}</span>
-                            <span className="employee-department">{employee.department_name || 'Brak działu'}</span>
+                            <span className="employee-department">{employee.department_name || 'Bez działu'}</span>
                             {employee.job_title && (
                                 <span className="employee-title">{employee.job_title}</span>
                             )}
@@ -246,14 +240,14 @@ export default function WorkStats() {
                             <span className="hours">
                                 {employee.is_working ? 
                                     `${parseFloat(employee.hours_today || 0).toFixed(1)}h` : 
-                                    'Nieobecny'
+                                    'Poza pracą'
                                 }
                             </span>
                         </div>
                         
                         {employee.is_working && employee.shift_start && (
                             <div className="start-time">
-                                Rozpoczął: {new Date(employee.shift_start).toLocaleTimeString('pl-PL', {
+                                Początek pracy: {new Date(employee.shift_start).toLocaleTimeString('pl-PL', {
                                     day: '2-digit',
                                     month: '2-digit',
                                     year: '2-digit',
@@ -269,7 +263,7 @@ export default function WorkStats() {
         
         {employeeList.length === 0 && (
             <div className="no-employees">
-                Brak danych o pracownikach
+                        Brak danych o obecności pracowników
             </div>
         )}
     </div>
