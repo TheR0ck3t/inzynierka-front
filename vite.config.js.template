@@ -10,6 +10,11 @@ export default defineConfig({
         target: 'http://YOUR_API_SERVER:PORT', // Zastąp swoim adresem API
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '')
+      },
+      '/socket.io': {
+        target: 'YOUR_WS_SERVER:PORT', // Zastąp swoim adresem WS
+        changeOrigin: true,
+        ws: true
       }
     }
   }

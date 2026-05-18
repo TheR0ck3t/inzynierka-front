@@ -32,7 +32,7 @@ export default function AddEmployeeForm({ onCancel, onSuccess }) {
     } catch (error) {
       componentLogger.error('Error adding employee:', error);
       const errorMessage = error.response?.data?.message || error.message || 'Nieznany błąd';
-      alert('Błąd podczas dodawania ' + (import.meta.env.VITE_EMPLOYEE + 'ów' || 'pracowników') + ': ' + errorMessage);
+      alert('Błąd podczas dodawania pracowników: ' + errorMessage);
     } finally {
       setIsSubmitting(false);
     }
@@ -40,7 +40,7 @@ export default function AddEmployeeForm({ onCancel, onSuccess }) {
   
   return(
     <div className="add-form-container">
-      <h2>Dodaj nowego {import.meta.env.VITE_EMPLOYEE ||'pracownika'}</h2>
+      <h2>Dodaj nowego pracownika</h2>
       
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="form-section">

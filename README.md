@@ -12,16 +12,34 @@ Frontend będący częścią zaawansowanego systemu do zarządzania dostępem pr
 - 👥 Zarządzanie pracownikami (CRUD)
 - 🃏 Enrolowanie i zarządzanie kartami RFID
 - 📊 Logi dostępu w real-time
+
+## 💻 Tech Stack
+
 ### Podstawowe
 - **React 19.1.0** - biblioteka do budowania interfejsu
-- Walidacja w czasie rzeczywistym
+- **Vite 6.3.5** - bundler i serwer deweloperski
+- **React Router 7.6.1** - routing aplikacji
+- **React Hook Form 7.57.0** - zarządzanie formularzami
+- **Axios 1.9.0** - HTTP client
+- **Socket.IO Client 4.8.1** - komunikacja real-time
 
 ### Interfejs i Wizualizacja
 - **FontAwesome 6.7.2** - ikony (liniowe, zwykłe, marki)
+- **Recharts 3.1.2** - interaktywne wykresy
+- **@dnd-kit 6.3.1** - drag and drop
 - **ESLint 9.25.0** - sprawdzenie jakości kodu
 
+## 📥 Instalacja
+
+### Wymagania
+- Node.js (wersja 16+)
+- npm lub yarn
 - Uruchomiony backend API (inzynierka-api) na porcie 3000
 
+### Kroki instalacji
+
+1. Klonowanie repozytorium:
+```bash
 git clone https://github.com/TheR0ck3t/inzynierka-front.git
 cd inzynierka-front
 ```
@@ -34,34 +52,75 @@ npm install
 3. Konfiguracja zmiennych środowiskowych:
 ```bash
 cp .env.example .env
-# Konfiguracja
-VITE_COMPANY_NAME="Galactic Republic"
+```
+
+Edytuj `.env` i ustaw:
+```
+VITE_COMPANY_NAME="Nazwa twojej firmy"
+VITE_API_URL=http://localhost:3000
 VITE_WS_URL=http://localhost:3000
 ```
 
 ## 🚀 Uruchomienie
+
+### Serwer deweloperski
+```bash
+npm run dev
 ```
 
+### Budowanie dla produkcji
+```bash
 npm run build
 ```
 
+### Podgląd produkcyjny
+```bash
+npm run preview
+```
+
+### Sprawdzenie kodu
+```bash
+npm run lint
+```
+
+
+
 ## 📁 Struktura Projektu
-│   │   └── TwoFaModal.jsx # Modal 2FA do wprowadzania kodów TOTP
+
+```
+src/
+├── components/            # Komponenty React
+│   ├── auth/              # Komponenty autoryzacji
+│   │   └── TwoFaModal.jsx  # Modal 2FA do wprowadzania kodów TOTP
 │   ├── employee/          # Zarządzanie pracownikami
-│   └── users/             # Zarządzanie użytkownikami
-│       ├── UpdatePassword.jsx     # Zmiana hasła
+│   │   ├── EmployeeForm.jsx
+│   │   └── EmployeeList.jsx
+│   ├── users/             # Zarządzanie użytkownikami
+│   │   └── UpdatePassword.jsx     # Zmiana hasła
 │   ├── Dashboard.jsx      # Panel administracyjny
-│   ├── Employees.jsx      # Zarządzanie pracownikami
+│   └── Employees.jsx      # Zarządzanie pracownikami
 ├── contexts/              # React Context API
 │   └── AuthContext.jsx    # Kontekst autoryzacji (z obsługą 2FA)
 ├── assets/                # Zasoby statyczne
 │   ├── styles/            # Pliki CSS
+│   └── images/
+├── utils/                 # Funkcje pomocnicze
+│   ├── axiosConfig.js     # Konfiguracja Axios
+│   └── validators.js      # Walidatory
 ├── Layout.jsx             # Wrapper layoutu z warunkowaniem
 ├── Pages.jsx              # Definicje tras i routing
+├── App.jsx                # Główny komponent aplikacji
 └── main.jsx               # Punkt wejścia aplikacji
+```
+
+## 🔐 Bezpieczeństwo
+
 - JWT w ciasteczkach z automatycznym odświeżaniem
 - Ochrona tras - automatyczne przekierowanie użytkowników niezalogowanych
 - Automatyczne wylogowanie przy odpowiedzi 401 (sesja wygasła)
+- Obsługa 2FA (Time-based One-Time Password - TOTP)
+
+## 📋 Szczegółowe Funkcjonalności
 
 ### Zarządzanie Pracownikami
 - Lista pracowników z danymi (imię, nazwisko, data urodzenia, data zatrudnienia)
@@ -94,7 +153,7 @@ npm run build
 - **Zarządzanie 2FA** - włączanie/wyłączanie z QR kodami
 - Dane profilowe użytkownika
 
-## Stylowanie i Projekt
+## 🎨 Stylowanie i Projekt
 
 - **Moduły CSS** dla komponentów
 - **Ikony FontAwesome** (liniowe, zwykłe, marki)
@@ -104,7 +163,7 @@ npm run build
 - Responsywny projekt (mobile-first)
 - Animacje CSS
 
-## Zmienne Środowiskowe
+## 🔧 Zmienne Środowiskowe
 
 | Zmienna | Opis | Przykład |
 |---------|------|---------|
@@ -113,23 +172,7 @@ npm run build
 | `VITE_API_URL` | URL backend API | `http://localhost:3000` |
 | `VITE_WS_URL` | URL WebSocket | `http://localhost:3000` |
 
-## 🔧 Dostępne Skrypty
-
-```bash
-# Serwer deweloperski z automatycznym przeładowaniem
-npm run dev
-
-# Zbudowanie dla produkcji
-npm run build
-
-# Podgląd zbudowanej aplikacji
-npm run preview
-
-# Sprawdzenie jakości kodu
-npm run lint
-```
-
-## 📦 Zależności Główne
+## 📦 Pełna Lista Zależności
 
 ```json
 {
@@ -176,3 +219,4 @@ Frontend komunikuje się z:
 - **inzynierka-api** - Backend REST API + Socket.IO
 - **PostgreSQL** - Dane użytkowników i pracowników (poprzez API)
 - **MQTT** - Pośrednio (poprzez kontroler)
+
