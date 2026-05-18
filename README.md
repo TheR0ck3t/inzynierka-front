@@ -58,8 +58,19 @@ Edytuj `.env` i ustaw:
 ```
 VITE_COMPANY_NAME="Nazwa twojej firmy"
 VITE_API_URL=http://localhost:3000
-VITE_WS_URL=http://localhost:3000
 ```
+
+4. Konfiguracja Vite (opcjonalnie):
+```bash
+cp vite.config.js.template vite.config.js
+```
+
+Plik `vite.config.js.template` zawiera zalecane ustawienia dla:
+- ✅ Aliasów ścieżek (`@/`, `@components`, etc.)
+- ✅ Proxy dla API i WebSocket
+- ✅ Optymalizacji build'u
+
+Edytuj `vite.config.js` jeśli potrzebujesz dostosować konfigurację do swoich potrzeb.
 
 ## 🚀 Uruchomienie
 
@@ -170,7 +181,6 @@ src/
 | `VITE_COMPANY_NAME` | Nazwa organizacji | `Galactic Republic` |
 | `VITE_EMPLOYEE` | Nazwa pracownika (singular) | `Clone Trooper` |
 | `VITE_API_URL` | URL backend API | `http://localhost:3000` |
-| `VITE_WS_URL` | URL WebSocket | `http://localhost:3000` |
 
 ## 📦 Pełna Lista Zależności
 
@@ -189,6 +199,61 @@ src/
 }
 ```
 
+## ⚙️ Konfiguracja Vite
+
+Plik `vite.config.js.template` zawiera zalecaną konfigurację dla środowiska deweloperskiego:
+
+```javascript
+// Główne elementy konfiguracji:
+server: {
+  proxy: {
+    '/api': {
+      target: 'http://localhost:3000',    // REST API
+      changeOrigin: true,
+      rewrite: (path) => path.replace(/^\/api/, '')
+    },
+    '/socket.io': {
+      target: 'http://localhost:3001',    // WebSocket
+      changeOrigin: true,
+      ws: true
+    }
+  }
+}
+```
+
+**⚠️ Ważne - Wdrażanie w Produkcji:**
+
+Po zbundlowaniu aplikacji (`npm run build`), **konfiguracja proxy z vite.config.js nie jest używana**. W produkcji należy skonfigurować serwer frontendowy (np. **Nginx**, Apache, etc.) do proxy'owania żądań:
+
+**Przykład konfiguracji Nginx:**
+```nginx
+server {
+  listen 80;
+  server_name your-domain.com;
+  root /path/to/dist;
+
+  # Proxy dla API
+  location /api/ {
+    proxy_pass http://backend-api:3000;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+  }
+
+  # Proxy dla WebSocket
+  location /socket.io {
+    proxy_pass http://backend-api:3000;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+  }
+
+  # React Router - fallback na index.html
+  location / {
+    try_files $uri $uri/ /index.html;
+  }
+}
+```
+
 ## 🐛 Rozwiązywanie Problemów
 
 **Brak połączenia z API:**
@@ -197,9 +262,9 @@ src/
 - Sprawdź CORS headers w backend
 
 **WebSocket nie pracuje:**
-- Sprawdź czy `VITE_WS_URL` wskazuje na backend
 - Zweryfikuj czy Socket.IO jest uruchomiony na serwerze
 - Sprawdź port 3000 w firewall
+- Zweryfikuj CORS ustawienia dla WebSocket
 
 **Kody 2FA nie działają:**
 - Sprawdzić czy zegar systemowy jest zsynchronizowany
