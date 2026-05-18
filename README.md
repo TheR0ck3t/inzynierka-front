@@ -1,180 +1,178 @@
 # Inżynierka Frontend
 
-Aplikacja frontend do systemu zarządzania pracownikami - projekt inżynierski.
+Aplikacja frontend do systemu zarządzania pracownikami - **projekt stworzony w ramach pracy inżynierskiej**.
 
-## 🚀 Technologie
+## 📚 O Projekcie
 
-- **React 19.1.0** - biblioteka UI
-- **Vite 6.3.5** - bundler i dev server
-- **React Router DOM 7.6.1** - routing aplikacji
-- **React Hook Form 7.57.0** - zarządzanie formularzami
-- **Axios 1.9.0** - HTTP client do komunikacji z API
-- **FontAwesome 6.7.2** - ikony i symbole
-- **ESLint 9.25.0** - linting kodu
+Frontend będący częścią zaawansowanego systemu do zarządzania dostępem pracowników z integracją RFID, komunikacji MQTT i obsługą dwuskładnikowej autoryzacji (2FA).
 
-## 📋 Wymagania
+## 🎯 Główne Funkcjonalności
 
-- Node.js (v16 lub nowszy)
-- npm lub yarn
-- Uruchomiony backend API
+- 🔐 Autoryzacja z 2FA (TOTP)
+- 👥 Zarządzanie pracownikami (CRUD)
+- 🃏 Enrolowanie i zarządzanie kartami RFID
+- 📊 Logi dostępu w real-time
+### Podstawowe
+- **React 19.1.0** - biblioteka do budowania interfejsu
+- Walidacja w czasie rzeczywistym
 
-## 🛠️ Instalacja
+### Interfejs i Wizualizacja
+- **FontAwesome 6.7.2** - ikony (liniowe, zwykłe, marki)
+- **ESLint 9.25.0** - sprawdzenie jakości kodu
 
-1. Sklonuj repozytorium:
-```bash
+- Uruchomiony backend API (inzynierka-api) na porcie 3000
+
 git clone https://github.com/TheR0ck3t/inzynierka-front.git
 cd inzynierka-front
 ```
 
-2. Zainstaluj zależności:
+2. Instalacja zależności:
 ```bash
 npm install
 ```
 
-3. Skonfiguruj plik vite.config.js:
-```bash
-cp vite.config.js.template vite.config.js
-```
-
-Następnie edytuj plik `vite.config.js` i zastąp `YOUR_API_SERVER:PORT` rzeczywistym adresem twojego API serwera.
-
-4. Skopiuj plik `.env.example` do `.env` i skonfiguruj zmienne środowiskowe:
+3. Konfiguracja zmiennych środowiskowych:
 ```bash
 cp .env.example .env
+# Konfiguracja
+VITE_COMPANY_NAME="Galactic Republic"
+VITE_WS_URL=http://localhost:3000
 ```
-
-Następnie edytuj plik `.env` zgodnie z twoją konfiguracją:
-```bash
-# Przykładowa konfiguracja
-VITE_COMPANY_NAME="Wielka Armia Republiki"
-VITE_EMPLOYEE="Klon"
-VITE_API_URL="http://localhost:3000"
-```
-
-### Zmienne środowiskowe
-- `VITE_COMPANY_NAME` - nazwa firmy/organizacji wyświetlana w aplikacji
-- `VITE_EMPLOYEE` - nazwa dla pracowników (np. "Klon", "Pracownik")
-- `VITE_API_URL` - adres URL backend API
 
 ## 🚀 Uruchomienie
-
-### Tryb deweloperski
-```bash
-npm run dev
 ```
 
-### Tryb produkcyjny
-```bash
 npm run build
 ```
 
-Aplikacja będzie dostępna na `http://localhost:5173`
-
-## 📁 Struktura projektu
-
-```
-src/
-├── components/             # Komponenty wielokrotnego użytku
-│   ├── auth/              # Komponenty autoryzacji
-│   │   ├── LoginForm.jsx  # Formularz logowania
+## 📁 Struktura Projektu
 │   │   └── TwoFaModal.jsx # Modal 2FA do wprowadzania kodów TOTP
 │   ├── employee/          # Zarządzanie pracownikami
-│   │   ├── AddEmployeeForm.jsx    # Formularz dodawania pracownika
-│   │   └── EmployeesList.jsx      # Lista pracowników z CRUD
-│   ├── layout/            # Komponenty layoutu
-│   │   ├── Menu.jsx       # Główne menu nawigacyjne
-│   │   └── Footer.jsx     # Stopka aplikacji
 │   └── users/             # Zarządzanie użytkownikami
 │       ├── UpdatePassword.jsx     # Zmiana hasła
-│       ├── UpdatePhoneNumber.jsx  # Aktualizacja telefonu
-│       └── Manage2FA.jsx          # Zarządzanie 2FA (QR kody, włączanie/wyłączanie)
-├── pages/                 # Główne strony aplikacji
-│   ├── Home.jsx           # Strona główna z logowaniem
 │   ├── Dashboard.jsx      # Panel administracyjny
 │   ├── Employees.jsx      # Zarządzanie pracownikami
-│   ├── AccountSettings.jsx # Ustawienia konta użytkownika
-│   ├── Statistics.jsx     # Statystyki (w rozwoju)
-│   ├── Logs.jsx           # Logi systemowe (w rozwoju)
-│   └── Error404.jsx       # Strona błędu 404
 ├── contexts/              # React Context API
 │   └── AuthContext.jsx    # Kontekst autoryzacji (z obsługą 2FA)
-├── hooks/                 # Custom React hooks
-│   └── useAuth.js         # Hook do zarządzania autoryzacją
-├── utils/                 # Narzędzia pomocnicze
-│   └── axiosConfig.js     # Konfiguracja HTTP client
 ├── assets/                # Zasoby statyczne
 │   ├── styles/            # Pliki CSS
-│   │   ├── TwoFAModal.css # Style dla modala 2FA
-│   │   └── ...inne pliki CSS
-│   └── Emblem_of_the_Galactic_Republic.svg # Logo aplikacji
-├── App.jsx                # Główny komponent aplikacji
 ├── Layout.jsx             # Wrapper layoutu z warunkowaniem
 ├── Pages.jsx              # Definicje tras i routing
 └── main.jsx               # Punkt wejścia aplikacji
+- JWT w ciasteczkach z automatycznym odświeżaniem
+- Ochrona tras - automatyczne przekierowanie użytkowników niezalogowanych
+- Automatyczne wylogowanie przy odpowiedzi 401 (sesja wygasła)
+
+### Zarządzanie Pracownikami
+- Lista pracowników z danymi (imię, nazwisko, data urodzenia, data zatrudnienia)
+- Dodawanie nowych pracowników z walidacją
+- Edycja danych pracownika
+- Usuwanie pracowników z potwierdzeniem
+- Eksport danych (w rozwoju)
+
+### Zarządzanie RFID
+- Enrolowanie nowych kart pracowników
+- Zarządzanie kartami dostępu
+- Historią skanów
+- Status aktywności kart
+
+### Monitoring i Statystyki
+- Logi dostępu w real-time (WebSocket)
+- Wykresy czasu pracy (Recharts)
+- Status obecności pracowników
+- Historia zmian (audit logs)
+
+### Śledzenie Czasu Pracy
+- Automatyczne logowanie wejść/wyjść
+- Obliczanie godzin pracy
+- Raporty dobowe/miesięczne
+- Eksport danych do CSV/PDF
+
+### Ustawienia Konta
+- Zmiana hasła z weryfikacją
+- Zmiana numeru telefonu
+- **Zarządzanie 2FA** - włączanie/wyłączanie z QR kodami
+- Dane profilowe użytkownika
+
+## Stylowanie i Projekt
+
+- **Moduły CSS** dla komponentów
+- **Ikony FontAwesome** (liniowe, zwykłe, marki)
+- **Recharts** dla interaktywnych wykresów
+- Ciemny motyw naukowy
+- Logo Galaktycznej Republiki
+- Responsywny projekt (mobile-first)
+- Animacje CSS
+
+## Zmienne Środowiskowe
+
+| Zmienna | Opis | Przykład |
+|---------|------|---------|
+| `VITE_COMPANY_NAME` | Nazwa organizacji | `Galactic Republic` |
+| `VITE_EMPLOYEE` | Nazwa pracownika (singular) | `Clone Trooper` |
+| `VITE_API_URL` | URL backend API | `http://localhost:3000` |
+| `VITE_WS_URL` | URL WebSocket | `http://localhost:3000` |
+
+## 🔧 Dostępne Skrypty
+
+```bash
+# Serwer deweloperski z automatycznym przeładowaniem
+npm run dev
+
+# Zbudowanie dla produkcji
+npm run build
+
+# Podgląd zbudowanej aplikacji
+npm run preview
+
+# Sprawdzenie jakości kodu
+npm run lint
 ```
 
-## 🔐 Funkcjonalności
+## 📦 Zależności Główne
 
-### Autoryzacja
-- Formularz logowania z walidacją
-- **2FA (TOTP)**: obsługa dwuskładnikowej autoryzacji z kodami czasowymi
-- **Modal 2FA**: responsywny modal do wprowadzania kodów 2FA podczas logowania
-- JWT w ciasteczkach z automatycznym odświeżaniem
-- Ochrona tras - przekierowanie niezalogowanych użytkowników
-- Automatyczne wylogowanie przy wygaśnięciu sesji (401)
+```json
+{
+  "react": "^19.1.0",
+  "react-dom": "^19.1.0",
+  "react-router-dom": "^7.6.1",
+  "react-hook-form": "^7.57.0",
+  "axios": "^1.9.0",
+  "socket.io-client": "^4.8.1",
+  "recharts": "^3.1.2",
+  "@fortawesome/react-fontawesome": "^0.2.2",
+  "@dnd-kit/core": "^6.3.1",
+  "vite": "^6.3.5"
+}
+```
 
-### Zarządzanie pracownikami
-- Lista pracowników z danymi podstawowymi i ID karty
-- Dodawanie nowych pracowników (imię, nazwisko, data urodzenia, data zatrudnienia)
-- Usuwanie pracowników z potwierdzeniem
-- Edycja danych (w rozwoju)
-- Walidacja formularzy z komunikatami błędów
+## 🐛 Rozwiązywanie Problemów
 
-### Ustawienia konta
-- Zmiana hasła z weryfikacją starego hasła
-- Aktualizacja numeru telefonu
-- **Zarządzanie 2FA**: włączanie/wyłączanie dwuskładnikowej autoryzacji
-- **QR kody**: automatyczne generowanie kodów QR dla aplikacji autentykacyjnych
-- Zarządzanie danymi osobowymi
+**Brak połączenia z API:**
+- Sprawdź czy backend API jest uruchomiony na porcie 3000
+- Zweryfikuj `VITE_API_URL` w `.env`
+- Sprawdź CORS headers w backend
 
-### Dashboard
-- Panel administracyjny z przeglądem systemu
-- Responsywne menu z dropdown użytkownika
-- Ikony FontAwesome w całej aplikacji
-- Motyw Galaktycznej Republiki (logo, stylizacja)
+**WebSocket nie pracuje:**
+- Sprawdź czy `VITE_WS_URL` wskazuje na backend
+- Zweryfikuj czy Socket.IO jest uruchomiony na serwerze
+- Sprawdź port 3000 w firewall
 
-## 🔐 Dwuskładnikowa autoryzacja (2FA)
+**Kody 2FA nie działają:**
+- Sprawdzić czy zegar systemowy jest zsynchronizowany
+- Spróbować innej aplikacji autentykacyjnej
+- Sprawdzić logi backend dla błędów TOTP
 
-Frontend obsługuje TOTP (Time-based One-Time Password) w pełnej integracji z backendem:
+## 📚 Dokumentacja
 
-### Proces logowania z 2FA
-1. Użytkownik wprowadza email i hasło w `LoginForm`
-2. Jeśli 2FA jest włączone, wyświetla się `TwoFaModal`
-3. Użytkownik wprowadza 6-cyfrowy kod z aplikacji autentykacyjnej
-4. Po weryfikacji następuje automatyczne przekierowanie do dashboardu
+Dodatkowe informacje w dokumentacji projektu:
+- [PROJEKT_API.md](../PROJEKT_API.md) - REST API endpoints
+- [REALTIME_COMMUNICATION.md](../REALTIME_COMMUNICATION.md) - WebSocket i MQTT
+- [diagrams/](../diagrams/) - Diagramy systemu
 
-### Zarządzanie 2FA
-- Komponent `Manage2FA` w ustawieniach konta
-- Generowanie kodów QR do skanowania w aplikacjach (Google Authenticator, Authy)
-- Włączanie/wyłączanie 2FA z weryfikacją kodów testowych
-- Responsywny design z animacjami CSS
+## 🤝 Integracja z Backend
 
-### Bezpieczeństwo
-- Modal 2FA nie można zamknąć bez podania kodu lub anulowania logowania
-- Automatyczna walidacja formatu kodu (6 cyfr)
-- Obsługa błędów z odpowiednimi komunikatami użytkownika
-- Brak logowania wrażliwych danych 2FA w konsoli
-
-## 🔌 Konfiguracja API
-
-Aplikacja komunikuje się z backend API przez Axios:
-- Proxy deweloperskie: `/api` → `http://localhost:3000`
-- Automatyczne ciasteczka: `withCredentials: true`
-- Interceptory odpowiedzi: obsługa 401 Unauthorized i błędów 2FA
-
-## 🎨 Stylowanie
-
-- CSS modules dla komponentów
-- FontAwesome dla ikon
-- Ciemny motyw z paletą kolorów sci-fi
-- Logo Galaktycznej Republiki jako główny element wizualny
+Frontend komunikuje się z:
+- **inzynierka-api** - Backend REST API + Socket.IO
+- **PostgreSQL** - Dane użytkowników i pracowników (poprzez API)
+- **MQTT** - Pośrednio (poprzez kontroler)
