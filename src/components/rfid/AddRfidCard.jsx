@@ -159,7 +159,7 @@ export default function AddRfidCard({ onSuccess, onCancel, employeeId }) {
                 credentials: 'include',
                 body: JSON.stringify({ 
                     reader,
-                    employeeId: employeeId // Dodaj ID pracownika
+                    employeeId: employeeId
                 })
             });
 

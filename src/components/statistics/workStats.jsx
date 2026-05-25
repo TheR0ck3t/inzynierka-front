@@ -30,7 +30,7 @@ export default function WorkStats() {
             axios.get('/api/work-stats/daily'),
             axios.get('/api/work-stats/weekly'), 
             axios.get('/api/work-stats/monthly'),
-            axios.get('/api/work-stats/all-employees-status') // Zmienione na endpoint zwracający wszystkich
+            axios.get('/api/work-stats/all-employees-status')
         ]);
         
         setDailyStats(Array.isArray(dailyRes.data?.data) ? dailyRes.data.data : []);

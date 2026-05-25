@@ -45,7 +45,6 @@ export default function AccountSettings() {
           <Manage2FA onUpdate={() => setshowManage2FA(false)} />
         )}
       </div>
-      {/* Możesz dodać więcej komponentów lub funkcji zarządzających ustawieniami konta */}
     </div>
   );
 }
